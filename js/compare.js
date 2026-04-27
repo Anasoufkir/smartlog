@@ -48,7 +48,14 @@ function sharedPayload(path) {
   var keyContent = keyEl ? (keyEl.dataset.keyContent || keyEl.value.trim()) : '';
   var sudo = document.getElementById('cmp-shared-sudo') ? document.getElementById('cmp-shared-sudo').checked : false;
   var payload = { path: path, sudo: sudo };
-  if (host) { payload.host = host; payload.port = port; payload.user = user; payload.keyContent = keyContent; }
+  if (host) {
+    payload.host = host; payload.port = port; payload.user = user;
+    if (keyContent && keyContent.includes('BEGIN')) {
+      payload.keyContent = keyContent;
+    } else if (keyContent) {
+      payload.keyPath = keyContent;
+    }
+  }
   return payload;
 }
 
@@ -282,11 +289,11 @@ LogScope.initCompare = function() {
 
         // Vérification de la clé SSH
         var keyEl = document.getElementById('cmp-shared-key');
-        var keyContent = keyEl ? (keyEl.dataset.keyContent || '') : '';
+        var keyContent = keyEl ? (keyEl.dataset.keyContent || keyEl.value.trim()) : '';
         var host = document.getElementById('cmp-shared-host') ? document.getElementById('cmp-shared-host').value.trim() : '';
 
         if (host && !keyContent) {
-          cmpSetError(side, '⚠️ Clé SSH non chargée — cliquez sur 📂 pour sélectionner votre fichier .pem');
+          cmpSetError(side, '⚠️ Clé SSH manquante — saisissez le chemin complet (ex: C:\\Users\\...\\cle.pem) ou cliquez sur 📂');
           return;
         }
 

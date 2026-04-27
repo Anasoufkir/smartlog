@@ -395,8 +395,10 @@ window.LogScope = window.LogScope || {};
     if (host && !sshUser) { alert('Veuillez renseigner l\'utilisateur SSH.'); return; }
 
     const keyContent = LogScope.getSshKeyContent('sshKeyPath');
-    if (host && (!keyContent || !keyContent.includes('BEGIN'))) {
-      alert('⚠️ Clé SSH non chargée — cliquez sur 📂 à droite du champ clé pour sélectionner votre fichier .pem');
+    const keyIsContent = keyContent && keyContent.includes('BEGIN');
+    const keyIsPath    = keyContent && !keyIsContent;
+    if (host && !keyContent) {
+      alert('⚠️ Clé SSH manquante — saisissez le chemin complet (ex: C:\\Users\\...\\cle.pem) ou cliquez sur 📂');
       return;
     }
 
@@ -407,7 +409,8 @@ window.LogScope = window.LogScope || {};
         host: host || undefined,
         port: host ? port : undefined,
         user: host ? sshUser : undefined,
-        keyContent: host ? keyContent : undefined,
+        keyContent: (host && keyIsContent) ? keyContent : undefined,
+        keyPath:    (host && keyIsPath)    ? keyContent : undefined,
         sudo: document.getElementById('useSudo').checked
       };
       const res = await authenticatedFetch(LOCAL_LOG_SERVICE, {
@@ -589,10 +592,11 @@ window.LogScope = window.LogScope || {};
       const sshUser = document.getElementById('addFileSshUser').value.trim();
       if (host && !sshUser) { alert('Veuillez renseigner l\'utilisateur SSH.'); return; }
       const addFileKey = LogScope.getSshKeyContent('addFileSshKey');
-      if (host && (!addFileKey || !addFileKey.includes('BEGIN'))) {
-        alert('⚠️ Clé SSH non chargée — cliquez sur 📂 à droite du champ clé pour sélectionner votre fichier .pem');
+      if (host && !addFileKey) {
+        alert('⚠️ Clé SSH manquante — saisissez le chemin complet (ex: C:\\Users\\...\\cle.pem) ou cliquez sur 📂');
         return;
       }
+      const addKeyIsContent = addFileKey && addFileKey.includes('BEGIN');
       document.getElementById('addFileModal').classList.remove('active');
       LogScope.showLoader('Lecture du fichier depuis le service local...');
       try {
@@ -600,7 +604,8 @@ window.LogScope = window.LogScope || {};
           path: logPath,
           host: host || undefined, port: host ? port : undefined,
           user: host ? sshUser : undefined,
-          keyContent: host ? addFileKey : undefined,
+          keyContent: (host && addKeyIsContent)  ? addFileKey : undefined,
+          keyPath:    (host && !addKeyIsContent) ? addFileKey : undefined,
           sudo: document.getElementById('addFileSudo').checked
         };
         const res = await authenticatedFetch(LOCAL_LOG_SERVICE, {
