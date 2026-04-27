@@ -352,12 +352,12 @@ app.post('/read-log', requireAuth, async (req, res) => {
 
     let privateKey;
     if (keyContent) {
-      privateKey = keyContent;
+      privateKey = keyContent.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     } else {
       if (!fs.existsSync(keyPath)) {
         return res.status(400).send('La clé SSH locale est introuvable : ' + keyPath);
       }
-      privateKey = fs.readFileSync(keyPath, 'utf8');
+      privateKey = fs.readFileSync(keyPath, 'utf8').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     }
 
     const conn = new Client();
@@ -387,7 +387,8 @@ app.post('/read-log', requireAuth, async (req, res) => {
       port: Number(port || 22),
       username: user,
       privateKey,
-      readyTimeout: 20000
+      readyTimeout: 30000,
+      keepaliveInterval: 5000
     });
   } catch (err) {
     res.status(500).send('Erreur serveur : ' + err.message);
@@ -426,7 +427,8 @@ app.get('/live-tail', (req, res) => {
 
   if (host) {
     // SSH tail -f
-    const privateKey = keyContent || (keyPath && fs.existsSync(keyPath) ? fs.readFileSync(keyPath, 'utf8') : null);
+    const rawKey = keyContent || (keyPath && fs.existsSync(keyPath) ? fs.readFileSync(keyPath, 'utf8') : null);
+    const privateKey = rawKey ? rawKey.replace(/\r\n/g, '\n').replace(/\r/g, '\n') : null;
     if (!user || !privateKey) {
       send('error', { message: 'Clé SSH ou utilisateur manquant' });
       return res.end();
@@ -447,7 +449,7 @@ app.get('/live-tail', (req, res) => {
     }).on('error', (err) => {
       send('error', { message: err.message });
       res.end();
-    }).connect({ host, port, username: user, privateKey, readyTimeout: 20000 });
+    }).connect({ host, port, username: user, privateKey, readyTimeout: 30000, keepaliveInterval: 5000 });
 
     req.on('close', () => conn.end());
   } else {
