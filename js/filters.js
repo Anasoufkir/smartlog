@@ -10,9 +10,23 @@ window.LogScope = window.LogScope || {};
 /**
  * Read the current filter controls from the DOM and rebuild `state.filtered`.
  */
+// Build a search matcher: supports /regex/flags or plain text
+function buildSearchMatcher(raw) {
+  if (!raw) return null;
+  const m = raw.match(/^\/(.+)\/([gimsuy]*)$/);
+  if (m) {
+    try {
+      const re = new RegExp(m[1], m[2] || 'i');
+      return (e) => re.test(e.message) || re.test(e.logger);
+    } catch { /* bad regex — fall through to plain text */ }
+  }
+  const lower = raw.toLowerCase();
+  return (e) => e.message.toLowerCase().includes(lower) || e.logger.toLowerCase().includes(lower);
+}
+
 LogScope.applyFilters = function () {
   const state = LogScope.state;
-  const search = document.getElementById('searchInput').value.toLowerCase();
+  const searchRaw = document.getElementById('searchInput').value;
   const dateStart = document.getElementById('dateStart').value;
   const dateEnd = document.getElementById('dateEnd').value;
   const pid = document.getElementById('pidInput').value.trim();
@@ -22,6 +36,7 @@ LogScope.applyFilters = function () {
 
   const startMs = dateStart ? new Date(dateStart).getTime() : null;
   const endMs = dateEnd ? new Date(dateEnd).getTime() : null;
+  const searchMatcher = buildSearchMatcher(searchRaw);
 
   state.filtered = state.entries.filter((e) => {
     if (!state.activeLevels.has(e.level)) return false;
@@ -31,9 +46,7 @@ LogScope.applyFilters = function () {
     if (source && e.source !== source) return false;
     if (db && e.db !== db) return false;
     if (logger && e.logger !== logger) return false;
-    if (search && !e.message.toLowerCase().includes(search) && !e.logger.toLowerCase().includes(search)) {
-      return false;
-    }
+    if (searchMatcher && !searchMatcher(e)) return false;
     return true;
   });
 

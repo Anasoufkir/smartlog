@@ -41,7 +41,7 @@
     <form class="auth-form active" id="loginForm" autocomplete="off">
       <div class="auth-field">
         <label for="loginUser">Identifiant</label>
-        <input id="loginUser" type="text" autocomplete="username" placeholder="admin" />
+        <input id="loginUser" type="text" autocomplete="username" placeholder="Identifiant" />
       </div>
       <div class="auth-field">
         <label for="loginPass">Mot de passe</label>
@@ -54,7 +54,6 @@
       </div>
       <div class="auth-error" id="loginError"></div>
       <button class="auth-submit" type="submit">Se connecter</button>
-      <div class="auth-hint">Compte par défaut : <strong>admin</strong> / <strong>logscope123</strong></div>
     </form>
 
     <!-- REGISTER FORM -->
@@ -111,7 +110,7 @@
     <div class="auth-pill" id="authUser" hidden></div>
     <button class="btn btn-admin" id="adminPanelBtn" hidden>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      Admin
+      Gestion des comptes
     </button>
     <button class="btn btn-secondary" id="compareToggleBtn" style="font-size:12px;padding:6px 14px;">⇔ Vue comparative</button>
     <div class="topbar-status" id="topbarStatus">
@@ -120,6 +119,13 @@
     <button class="btn btn-secondary" id="logoutBtn" hidden style="font-size:12px;padding:6px 14px;">Déconnexion</button>
   </div>
 </header>
+
+<!-- Bandeau admin (visible uniquement pour les admins connectés) -->
+<div class="admin-banner" id="adminBanner" hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  <span>Vous êtes connecté en tant qu'<strong>administrateur</strong>.</span>
+  <button class="admin-banner-btn" id="adminBannerBtn" type="button">Ouvrir la gestion des comptes →</button>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════════════════════════
      ADMIN PANEL
@@ -245,6 +251,11 @@
   <div class="dashboard" id="dashboard">
 
     <div class="stats-grid" id="statsGrid"></div>
+    <div class="stat-card anomaly-ok" id="anomalyCard" style="display:none">
+      <div class="label">Anomalies</div>
+      <div class="value" style="color:var(--success)">0</div>
+      <div class="sub">Aucun pic détecté</div>
+    </div>
 
     <div class="content-grid">
 
@@ -257,12 +268,25 @@
             <option value="odoo">Odoo</option>
             <option value="postgres">PostgreSQL</option>
             <option value="syslog">Syslog (Ubuntu)</option>
+            <option value="json">JSON (Docker/K8s/Node.js)</option>
           </select>
         </div>
 
         <div class="filter-group">
           <h3>Recherche</h3>
-          <input type="text" class="input" id="searchInput" placeholder="Rechercher dans le message..." />
+          <div style="position:relative">
+            <input type="text" class="input" id="searchInput" placeholder="Texte ou /regex/i..." style="padding-right:70px" />
+            <span class="search-hint-badge" title="Astuce : utilisez /regex/ pour une recherche par expression régulière">/regex/</span>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h3>Presets de filtres</h3>
+          <div style="display:flex;gap:6px;align-items:center">
+            <select class="input" id="presetsSelect" style="flex:1;font-size:12px"></select>
+            <button class="btn btn-secondary btn-small" id="presetSaveBtn" title="Sauvegarder les filtres actuels">💾</button>
+            <button class="btn btn-secondary btn-small" id="presetDeleteBtn" title="Supprimer le preset" disabled>🗑</button>
+          </div>
         </div>
 
         <div class="filter-group">
@@ -316,6 +340,8 @@
           <div class="tab" data-tab="timeline">Timeline</div>
           <div class="tab" data-tab="gantt">Gantt</div>
           <div class="tab" data-tab="pids">PIDs <span class="count" id="tabPidsCount">0</span></div>
+          <div class="tab tab-live" data-tab="livetail">⚡ Live</div>
+          <div class="tab" data-tab="alerts">🔔 Alertes</div>
         </div>
 
         <!-- LOGS TAB -->
@@ -327,6 +353,7 @@
             <div class="toolbar-actions">
               <button class="btn-secondary" id="addFileBtn">Ajouter un fichier</button>
               <button class="btn-secondary" id="filterLocksBtn">Locks</button>
+              <button class="btn-secondary" id="reportBtn">📄 Rapport</button>
               <button class="btn-secondary" id="exportCsvBtn">Export CSV</button>
               <button class="btn-secondary" id="exportJsonBtn">Export JSON</button>
             </div>
@@ -399,9 +426,75 @@
           </div>
           <div class="workers-grid" id="pidsGrid"></div>
         </div>
+
+        <!-- LIVE TAIL TAB -->
+        <div class="tab-panel" data-panel="livetail">
+          <div class="livetail-panel">
+            <div class="livetail-config">
+              <h3 class="livetail-title">⚡ Live Tail — Monitoring en temps réel</h3>
+              <div class="livetail-form">
+                <input class="input" id="liveTailPath" type="text" placeholder="Chemin du fichier (ex: /var/log/odoo/odoo.log)" style="flex:2" />
+                <select class="input" id="liveTailFormat" style="width:180px">
+                  <option value="auto">Format auto</option>
+                  <option value="odoo">Odoo</option>
+                  <option value="postgres">PostgreSQL</option>
+                  <option value="syslog">Syslog</option>
+                  <option value="json">JSON</option>
+                </select>
+              </div>
+              <div class="livetail-form">
+                <input class="input" id="liveTailHost" type="text" placeholder="Hôte SSH (optionnel)" />
+                <input class="input" id="liveTailPort" type="text" placeholder="Port SSH (22)" style="width:100px" />
+                <input class="input" id="liveTailUser" type="text" placeholder="Utilisateur SSH" />
+                <input class="input" id="liveTailKey" type="text" placeholder="Clé SSH (chemin local)" />
+                <label class="check" style="white-space:nowrap;gap:6px"><input type="checkbox" id="liveTailSudo" /> sudo</label>
+              </div>
+              <div class="livetail-actions">
+                <button class="btn btn-primary" id="liveTailStartBtn">▶ Démarrer</button>
+                <button class="btn btn-secondary" id="liveTailStopBtn" disabled>⏹ Arrêter</button>
+                <span class="live-status" id="liveTailStatus">En attente…</span>
+              </div>
+            </div>
+            <div class="livetail-note">
+              Les nouvelles lignes sont parsées et ajoutées en direct au tableau de logs.
+              Les filtres actifs s'appliquent automatiquement.
+            </div>
+          </div>
+        </div>
+
+        <!-- ALERTS TAB -->
+        <div class="tab-panel" data-panel="alerts">
+          <div class="alerts-panel">
+            <h3 class="alerts-title">🔔 Alertes seuil</h3>
+            <p class="alerts-desc">Définissez des règles : si plus de N occurrences d'un niveau dans une fenêtre de temps, une alerte s'affiche lors de l'analyse.</p>
+
+            <form class="alerts-form" id="alertRuleForm">
+              <select class="input" id="alertLevel">
+                <option value="CRITICAL">CRITICAL</option>
+                <option value="ERROR" selected>ERROR</option>
+                <option value="WARNING">WARNING</option>
+              </select>
+              <input class="input" id="alertCount" type="number" min="1" placeholder="Nombre (ex: 10)" style="width:130px" />
+              <span style="color:var(--text-2);font-size:13px">en</span>
+              <input class="input" id="alertWindow" type="number" min="1" placeholder="Minutes (ex: 5)" style="width:120px" />
+              <span style="color:var(--text-2);font-size:13px">minutes</span>
+              <button class="btn btn-primary" type="submit">Ajouter</button>
+            </form>
+
+            <table class="admin-table" style="margin-top:16px">
+              <thead><tr><th>Niveau</th><th>Seuil</th><th>Fenêtre</th><th>Action</th></tr></thead>
+              <tbody id="alertRulesBody"></tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
+
+  <!-- Alertes banner (affiché après analyse) -->
+  <div id="alertsBanner" hidden style="margin:0 28px 0;"></div>
+
 </main>
 
 <!-- ═══════════════════════════════════════════════════════════════════════════
@@ -479,6 +572,19 @@
      MODALS
 ════════════════════════════════════════════════════════════════════════════ -->
 
+<!-- Modal annotation -->
+<div class="modal-overlay" id="annotationModal">
+  <div class="modal" style="width:480px;max-width:100%">
+    <button class="close" id="annotationModalClose">✕</button>
+    <h2 id="annotationTitle" style="margin-bottom:12px">Annotation</h2>
+    <textarea id="annotationText" class="input" rows="4" placeholder="Votre note (investigation, faux positif, ticket…)" style="width:100%;resize:vertical;font-size:13px"></textarea>
+    <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+      <button class="btn btn-danger btn-small" id="annotationDeleteBtn" style="display:none">Supprimer</button>
+      <button class="btn btn-primary" id="annotationSaveBtn">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal détail log -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
@@ -551,6 +657,7 @@
 <script src="js/formats/odoo.js"></script>
 <script src="js/formats/postgres.js"></script>
 <script src="js/formats/syslog.js"></script>
+<script src="js/formats/json.js"></script>
 <script src="js/formats/detector.js"></script>
 <script src="js/parser.js"></script>
 <script src="js/filters.js"></script>
@@ -561,6 +668,12 @@
 <script src="js/ui.js"></script>
 <script src="js/compare.js"></script>
 <script src="js/admin.js"></script>
+<script src="js/presets.js"></script>
+<script src="js/report.js"></script>
+<script src="js/livetail.js"></script>
+<script src="js/annotations.js"></script>
+<script src="js/alerts.js"></script>
+<script src="js/anomaly.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

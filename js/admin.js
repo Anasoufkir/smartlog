@@ -276,6 +276,13 @@
     });
   }
 
+  // Expose pour accès externe (ex: bandeau admin)
+  window.LogScope.loadAdminUsers = function () {
+    document.getElementById('appMain').style.display = 'none';
+    document.getElementById('compareSection').style.display = 'none';
+    loadUsers();
+  };
+
   // Wait for DOM
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

@@ -96,6 +96,7 @@ window.LogScope = window.LogScope || {};
     const logoutBtn   = document.getElementById('logoutBtn');
     const authPill    = document.getElementById('authUser');
     const adminBtn    = document.getElementById('adminPanelBtn');
+    const adminBanner = document.getElementById('adminBanner');
 
     if (user) {
       authPill.hidden = false;
@@ -106,10 +107,12 @@ window.LogScope = window.LogScope || {};
       `;
       logoutBtn.hidden = false;
       adminBtn.hidden  = user.role !== 'admin';
+      if (adminBanner) adminBanner.hidden = user.role !== 'admin';
     } else {
       authPill.hidden  = true;
       logoutBtn.hidden = true;
       adminBtn.hidden  = true;
+      if (adminBanner) adminBanner.hidden = true;
     }
   }
 
@@ -289,6 +292,14 @@ window.LogScope = window.LogScope || {};
 
     document.getElementById('logoutBtn').addEventListener('click', logout);
 
+    const adminBannerBtn = document.getElementById('adminBannerBtn');
+    if (adminBannerBtn) {
+      adminBannerBtn.addEventListener('click', () => {
+        document.getElementById('adminPanel').hidden = false;
+        LogScope.loadAdminUsers && LogScope.loadAdminUsers();
+      });
+    }
+
     const hasSession = await restoreSession();
     document.getElementById('authOverlay').classList.toggle('active', !hasSession);
   }
@@ -466,6 +477,17 @@ window.LogScope = window.LogScope || {};
     LogScope.populateSelects();
     LogScope.setDefaultDateRange();
     LogScope.applyFilters();
+
+    // Show anomaly card
+    const anomalyCard = document.getElementById('anomalyCard');
+    if (anomalyCard) anomalyCard.style.display = '';
+    LogScope.renderAnomalyCard && LogScope.renderAnomalyCard();
+
+    // Evaluate threshold alerts
+    LogScope.evaluateAlerts && LogScope.evaluateAlerts();
+
+    // Load annotations for this file
+    LogScope.loadAnnotations && LogScope.loadAnnotations();
   }
 
   function updateDashboard() {
@@ -585,7 +607,14 @@ window.LogScope = window.LogScope || {};
     document.getElementById('newFileBtn').addEventListener('click', loadNewFile);
     document.getElementById('exportCsvBtn').addEventListener('click', () => LogScope.exportFiltered('csv'));
     document.getElementById('exportJsonBtn').addEventListener('click', () => LogScope.exportFiltered('json'));
+    document.getElementById('reportBtn')?.addEventListener('click', () => LogScope.generateReport());
     document.getElementById('loadPathBtn').addEventListener('click', loadPathFromService);
+
+    // Presets, live tail, annotations, alerts
+    LogScope.initPresets();
+    LogScope.initLiveTail();
+    LogScope.initAnnotations();
+    LogScope.initAlerts();
 
     document.getElementById('formatSelect').addEventListener('change', () => {
       if (LogScope.state.rawText) reparseWithFormat();

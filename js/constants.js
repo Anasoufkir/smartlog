@@ -22,13 +22,15 @@ LogScope.LEVEL_COLORS = {
 LogScope.FORMATS = {
   ODOO: 'odoo',
   POSTGRES: 'postgres',
-  SYSLOG: 'syslog'
+  SYSLOG: 'syslog',
+  JSON: 'json'
 };
 
 LogScope.FORMAT_NAMES = {
   odoo: 'Odoo',
   postgres: 'PostgreSQL',
-  syslog: 'Syslog (Ubuntu)'
+  syslog: 'Syslog (Ubuntu)',
+  json: 'JSON (Docker/K8s/Node.js)'
 };
 
 /**

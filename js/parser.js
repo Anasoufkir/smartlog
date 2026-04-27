@@ -13,12 +13,14 @@ window.LogScope = window.LogScope || {};
 function parseByFormat(format, text, onProgress) {
   if (format === LogScope.FORMATS.POSTGRES) return LogScope.parsePostgres(text);
   if (format === LogScope.FORMATS.SYSLOG) return LogScope.parseSyslog(text);
+  if (format === LogScope.FORMATS.JSON) return LogScope.parseJson(text);
   return LogScope.parseOdoo(text);
 }
 
 function parseByFormatAsync(format, lines, onProgress) {
   if (format === LogScope.FORMATS.POSTGRES) return LogScope.parsePostgresLinesAsync(lines, onProgress);
   if (format === LogScope.FORMATS.SYSLOG) return LogScope.parseSyslogLinesAsync(lines, onProgress);
+  if (format === LogScope.FORMATS.JSON) return LogScope.parseJsonLinesAsync(lines, onProgress);
   return LogScope.parseOdooLinesAsync(lines, onProgress);
 }
 

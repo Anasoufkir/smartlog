@@ -389,6 +389,160 @@ app.post('/read-log', requireAuth, async (req, res) => {
   }
 });
 
+// ── Live tail (Server-Sent Events) ───────────────────────────────────────────
+
+app.get('/live-tail', (req, res) => {
+  // Auth via query param token (SSE can't set headers)
+  const token = req.query.token || '';
+  const session = sessions.get(token);
+  if (!session || session.expiresAt < Date.now()) {
+    return res.status(401).send('Non autorisé');
+  }
+
+  const logPath = req.query.path;
+  if (!logPath) return res.status(400).send('Paramètre path requis');
+
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.flushHeaders();
+
+  const send = (event, data) => {
+    res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+  };
+
+  const host    = req.query.host;
+  const port    = Number(req.query.port || 22);
+  const user    = req.query.user;
+  const keyPath = req.query.keyPath;
+  const sudo    = req.query.sudo === '1';
+
+  if (host) {
+    // SSH tail -f
+    if (!user || !keyPath || !fs.existsSync(keyPath)) {
+      send('error', { message: 'Clé SSH ou utilisateur manquant' });
+      return res.end();
+    }
+    const conn = new Client();
+    const privateKey = fs.readFileSync(keyPath, 'utf8');
+    conn.on('ready', () => {
+      send('connected', { path: logPath, mode: 'ssh' });
+      const cmd = (sudo ? 'sudo ' : '') + `tail -f -n 0 ${logPath}`;
+      conn.exec(cmd, (err, stream) => {
+        if (err) { send('error', { message: err.message }); conn.end(); return; }
+        stream.on('data', (chunk) => {
+          chunk.toString().split(/\r?\n/).forEach(line => {
+            if (line.trim()) send('line', { line });
+          });
+        });
+        stream.on('close', () => conn.end());
+      });
+    }).on('error', (err) => {
+      send('error', { message: err.message });
+      res.end();
+    }).connect({ host, port, username: user, privateKey, readyTimeout: 20000 });
+
+    req.on('close', () => conn.end());
+  } else {
+    // Local file watch
+    if (!fs.existsSync(logPath)) {
+      send('error', { message: 'Fichier introuvable : ' + logPath });
+      return res.end();
+    }
+    send('connected', { path: logPath, mode: 'local' });
+    let fileSize = fs.statSync(logPath).size;
+
+    const watcher = fs.watchFile(logPath, { interval: 500 }, (curr) => {
+      if (curr.size <= fileSize) return;
+      const stream = fs.createReadStream(logPath, { start: fileSize, encoding: 'utf8' });
+      let buf = '';
+      stream.on('data', d => { buf += d; });
+      stream.on('end', () => {
+        fileSize = curr.size;
+        buf.split(/\r?\n/).forEach(line => {
+          if (line.trim()) send('line', { line });
+        });
+      });
+    });
+
+    const keepAlive = setInterval(() => res.write(': ping\n\n'), 20000);
+    req.on('close', () => {
+      fs.unwatchFile(logPath, watcher);
+      clearInterval(keepAlive);
+    });
+  }
+});
+
+// ── Annotations ───────────────────────────────────────────────────────────────
+
+const ANNOTATIONS_FILE = path.join(DB_DIR, 'annotations.json');
+
+function readAnnotations() {
+  if (!fs.existsSync(ANNOTATIONS_FILE)) return [];
+  try { return JSON.parse(fs.readFileSync(ANNOTATIONS_FILE, 'utf8')); } catch { return []; }
+}
+
+function writeAnnotations(list) {
+  fs.writeFileSync(ANNOTATIONS_FILE, JSON.stringify(list, null, 2));
+}
+
+app.get('/api/annotations', requireAuth, (req, res) => {
+  const { hash } = req.query;
+  if (!hash) return res.status(400).json({ error: 'hash requis' });
+  const list = readAnnotations().filter(a => a.hash === hash);
+  res.json(list);
+});
+
+app.post('/api/annotations', requireAuth, (req, res) => {
+  const { hash, entryIdx, text, username } = req.body;
+  if (!hash || entryIdx == null || !text) return res.status(400).json({ error: 'hash, entryIdx et text requis' });
+
+  const list = readAnnotations();
+  const existing = list.findIndex(a => a.hash === hash && a.entryIdx === Number(entryIdx));
+  const ann = {
+    id: existing >= 0 ? list[existing].id : Date.now(),
+    hash, entryIdx: Number(entryIdx), text: String(text).slice(0, 1000),
+    username: String(username || req.session.username || 'anonymous').slice(0, 64),
+    createdAt: existing >= 0 ? list[existing].createdAt : new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  if (existing >= 0) list[existing] = ann;
+  else list.push(ann);
+  writeAnnotations(list);
+  res.json(ann);
+});
+
+app.delete('/api/annotations/:id', requireAuth, (req, res) => {
+  const id = Number(req.params.id);
+  const list = readAnnotations().filter(a => a.id !== id);
+  writeAnnotations(list);
+  res.json({ success: true });
+});
+
+// ── Ingestion push ────────────────────────────────────────────────────────────
+
+const INGEST_DIR = path.join(DB_DIR, 'ingest');
+
+app.post('/ingest', requireAuth, (req, res) => {
+  try {
+    fs.mkdirSync(INGEST_DIR, { recursive: true });
+    const { lines, source } = req.body;
+    if (!lines || !Array.isArray(lines)) {
+      return res.status(400).json({ error: '"lines" doit être un tableau de chaînes.' });
+    }
+    const date = new Date().toISOString().slice(0, 10);
+    const file = path.join(INGEST_DIR, `${date}.log`);
+    const content = lines.map(l => String(l)).join('\n') + '\n';
+    fs.appendFileSync(file, content, 'utf8');
+    console.log(`[ingest] ${lines.length} ligne(s) depuis ${source || 'inconnu'} → ${file}`);
+    res.json({ ingested: lines.length, file });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.listen(3000, '0.0.0.0', () => {
   console.log('Service LogScope démarré sur http://localhost:3000');
   console.log(`Connexion par défaut : ${DEFAULT_USER} / ${DEFAULT_PASS}`);

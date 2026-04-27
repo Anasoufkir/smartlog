@@ -121,22 +121,27 @@ LogScope.renderLogRows = function () {
   const q = document.getElementById('searchInput').value;
   container.innerHTML = pageEntries.map((e) => {
     const truncMsg = e.message.length > 400 ? e.message.slice(0, 400) + '…' : e.message;
+    const ann = LogScope.getAnnotation ? LogScope.getAnnotation(e.idx) : null;
+    const annIcon = ann
+      ? `<button class="ann-btn ann-btn-has" data-idx="${e.idx}" title="${LogScope.escapeHtml(ann.text)}">📝</button>`
+      : `<button class="ann-btn" data-idx="${e.idx}" title="Ajouter une annotation">✏</button>`;
     return `
-      <div class="log-row" data-idx="${e.idx}">
+      <div class="log-row${ann ? ' log-row-annotated' : ''}" data-idx="${e.idx}">
         <div class="ts">${e.ts}</div>
         <div class="pid" data-pid="${e.pid}">${e.pid}</div>
         <div><span class="level-badge level-${e.level}">${e.level}</span></div>
         <div class="logger" title="${LogScope.escapeHtml(e.logger)}">${LogScope.escapeHtml(e.logger)}</div>
         <div class="msg">${LogScope.highlight(truncMsg, q)}</div>
         <div class="source">${e.source || '—'}</div>
+        <div class="ann-cell">${annIcon}</div>
       </div>
     `;
   }).join('');
 
-  // Attach handlers (keeps markup clean and avoids inline onclick attrs)
+  // Attach handlers
   container.querySelectorAll('.log-row').forEach((row) => {
     row.addEventListener('click', function (ev) {
-      if (ev.target.classList.contains('pid')) return;
+      if (ev.target.classList.contains('pid') || ev.target.classList.contains('ann-btn')) return;
       LogScope.showEntryDetail(parseInt(this.dataset.idx, 10));
     });
   });
@@ -144,6 +149,12 @@ LogScope.renderLogRows = function () {
     el.addEventListener('click', function (ev) {
       ev.stopPropagation();
       LogScope.filterByPid(this.dataset.pid);
+    });
+  });
+  container.querySelectorAll('.ann-btn').forEach((btn) => {
+    btn.addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      LogScope.openAnnotationModal && LogScope.openAnnotationModal(parseInt(this.dataset.idx, 10));
     });
   });
 

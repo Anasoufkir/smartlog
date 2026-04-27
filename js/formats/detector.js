@@ -18,6 +18,19 @@ LogScope.detectFormat = function (text) {
   }
   if (lines.length === 0) return null;
 
+  // JSON: count how many non-empty lines parse as JSON with timestamp+level
+  let jsonScore = 0;
+  for (const line of lines) {
+    if (!line.trim() || line.trim()[0] !== '{') continue;
+    try {
+      const obj = JSON.parse(line);
+      const hasTs = ['timestamp','time','@timestamp','ts','date','t','@t'].some(f => obj[f] != null);
+      const hasMsg = ['message','msg','log','text','body','event','@m'].some(f => obj[f] != null);
+      if (hasTs || hasMsg) jsonScore++;
+    } catch { /* not JSON */ }
+  }
+  if (jsonScore / lines.length >= 0.3) return LogScope.FORMATS.JSON;
+
   let odoo = 0, pg = 0, sys = 0;
   for (const line of lines) {
     if (LogScope.ODOO_REGEX.test(line)) odoo++;
