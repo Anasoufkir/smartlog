@@ -130,7 +130,6 @@ LogScope.initSshKeyPicker = function (browseId, pickerId, displayId) {
     }
   } catch (e) { /* ignore */ }
 
-  display.addEventListener('click', () => picker.click());
   browseBtn.addEventListener('click', (e) => { e.stopPropagation(); picker.click(); });
 
   picker.addEventListener('change', () => {
