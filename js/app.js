@@ -509,6 +509,24 @@ window.LogScope = window.LogScope || {};
     document.getElementById('fileInput').value = '';
   }
 
+  // ── Log file picker helper ────────────────────────────────────────────────
+
+  function initLogFilePicker(browseId, pickerId, beforeLoad) {
+    const browseBtn = document.getElementById(browseId);
+    const picker    = document.getElementById(pickerId);
+    if (!browseBtn || !picker) return;
+
+    browseBtn.addEventListener('click', (e) => { e.stopPropagation(); picker.click(); });
+
+    picker.addEventListener('change', async () => {
+      const file = picker.files[0];
+      if (!file) return;
+      picker.value = '';
+      if (beforeLoad) beforeLoad();
+      await handleFile(file);
+    });
+  }
+
   // ── Events ────────────────────────────────────────────────────────────────
 
   function bindEvents() {
@@ -616,6 +634,27 @@ window.LogScope = window.LogScope || {};
     LogScope.initSshKeyPicker('addFileSshKeyBrowseBtn',   'addFileSshKeyPicker', 'addFileSshKey');
     LogScope.initSshKeyPicker('liveTailKeyBrowseBtn',     'liveTailKeyPicker',   'liveTailKey');
     LogScope.initSshKeyPicker('cmpSharedKeyBrowseBtn',    'cmpSharedKeyPicker',  'cmp-shared-key');
+
+    // Log file pickers — charge directement le fichier sélectionné
+    initLogFilePicker('pathInputBrowseBtn',    'pathInputPicker');
+    initLogFilePicker('addFilePathBrowseBtn',  'addFilePathPicker', () => {
+      document.getElementById('addFileModal')?.classList.remove('active');
+    });
+
+    // Live tail path picker — remplit juste le champ (chemin serveur nécessaire)
+    const ltPicker = document.getElementById('liveTailPathPicker');
+    const ltBrowse = document.getElementById('liveTailPathBrowseBtn');
+    if (ltBrowse && ltPicker) {
+      ltBrowse.addEventListener('click', () => ltPicker.click());
+      ltPicker.addEventListener('change', () => {
+        const file = ltPicker.files[0];
+        if (file) {
+          document.getElementById('liveTailPath').value = file.name;
+          ltPicker.value = '';
+          alert(`Fichier sélectionné : « ${file.name} »\n\nPour le live tail, renseignez le chemin complet sur le serveur, ex :\n/var/log/odoo/${file.name}`);
+        }
+      });
+    }
 
     // Presets, live tail, annotations, alerts
     LogScope.initPresets();
