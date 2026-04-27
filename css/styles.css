@@ -105,13 +105,13 @@ main { max-width: 1600px; margin: 0 auto; padding: 28px; }
 .upload-zone {
   border: 2px dashed var(--border-strong);
   border-radius: 14px;
-  padding: 60px 30px;
+  padding: 32px 30px;
   text-align: center;
   background: var(--surface);
   transition: all .25s ease;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 .upload-zone::before {
   content: ''; position: absolute; inset: 0;
@@ -1496,7 +1496,6 @@ mark {
   border-radius: 8px 0 0 8px;
   flex: 1;
   min-width: 0;
-  cursor: pointer;
 }
 .btn-key-browse {
   background: var(--surface-2);
