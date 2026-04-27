@@ -117,7 +117,19 @@ LogScope.initSshKeyPicker = function (browseId, pickerId, displayId) {
   const display   = document.getElementById(displayId);
   if (!browseBtn || !picker || !display) return;
 
-  // Also allow clicking directly on the readonly text input
+  const storageKey = 'sshKey_' + displayId;
+
+  // Restore previously loaded key from sessionStorage
+  try {
+    const saved = sessionStorage.getItem(storageKey);
+    if (saved) {
+      const { name, content } = JSON.parse(saved);
+      display.value = name;
+      display.dataset.keyContent = content;
+      display.title = `Clé chargée : ${name}`;
+    }
+  } catch (e) { /* ignore */ }
+
   display.addEventListener('click', () => picker.click());
   browseBtn.addEventListener('click', (e) => { e.stopPropagation(); picker.click(); });
 
@@ -125,13 +137,16 @@ LogScope.initSshKeyPicker = function (browseId, pickerId, displayId) {
     const file = picker.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = (ev) => {
       display.value = file.name;
-      display.dataset.keyContent = e.target.result;
+      display.dataset.keyContent = ev.target.result;
       display.title = `Clé chargée : ${file.name}`;
+      try {
+        sessionStorage.setItem(storageKey, JSON.stringify({ name: file.name, content: ev.target.result }));
+      } catch (e) { /* ignore */ }
     };
     reader.readAsText(file);
-    picker.value = ''; // reset so same file can be re-selected
+    picker.value = '';
   });
 };
 
