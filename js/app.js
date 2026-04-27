@@ -394,9 +394,14 @@ window.LogScope = window.LogScope || {};
     const sshKeyPath = document.getElementById('sshKeyPath').value.trim();
     if (host && !sshUser) { alert('Veuillez renseigner l\'utilisateur SSH.'); return; }
 
+    const keyContent = LogScope.getSshKeyContent('sshKeyPath');
+    if (host && (!keyContent || !keyContent.includes('BEGIN'))) {
+      alert('⚠️ Clé SSH non chargée — cliquez sur 📂 à droite du champ clé pour sélectionner votre fichier .pem');
+      return;
+    }
+
     LogScope.showLoader('Lecture du fichier depuis le service local...');
     try {
-      const keyContent = LogScope.getSshKeyContent('sshKeyPath');
       const payload = {
         path: logPath,
         host: host || undefined,
@@ -583,6 +588,11 @@ window.LogScope = window.LogScope || {};
       const port    = document.getElementById('addFilePort').value.trim() || '22';
       const sshUser = document.getElementById('addFileSshUser').value.trim();
       if (host && !sshUser) { alert('Veuillez renseigner l\'utilisateur SSH.'); return; }
+      const addFileKey = LogScope.getSshKeyContent('addFileSshKey');
+      if (host && (!addFileKey || !addFileKey.includes('BEGIN'))) {
+        alert('⚠️ Clé SSH non chargée — cliquez sur 📂 à droite du champ clé pour sélectionner votre fichier .pem');
+        return;
+      }
       document.getElementById('addFileModal').classList.remove('active');
       LogScope.showLoader('Lecture du fichier depuis le service local...');
       try {
@@ -590,7 +600,7 @@ window.LogScope = window.LogScope || {};
           path: logPath,
           host: host || undefined, port: host ? port : undefined,
           user: host ? sshUser : undefined,
-          keyContent: host ? LogScope.getSshKeyContent('addFileSshKey') : undefined,
+          keyContent: host ? addFileKey : undefined,
           sudo: document.getElementById('addFileSudo').checked
         };
         const res = await authenticatedFetch(LOCAL_LOG_SERVICE, {
