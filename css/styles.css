@@ -1322,6 +1322,16 @@ mark {
 .cmp-pid { color: var(--text-3); font-size: 10px; line-height: 1.6; }
 .cmp-msg { word-break: break-word; line-height: 1.5; color: var(--text); }
 
+.cmp-error-bar {
+  padding: 8px 14px;
+  background: rgba(220, 38, 38, 0.12);
+  color: #f87171;
+  border-left: 3px solid #ef4444;
+  border-radius: 4px;
+  font-size: 13px;
+  margin: 6px 0;
+}
+
 .cmp-empty {
   padding: 48px 20px;
   text-align: center;

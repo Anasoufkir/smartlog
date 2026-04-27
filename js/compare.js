@@ -27,6 +27,13 @@ function cmpVal(side, field) {
   return el ? el.value : '';
 }
 
+function cmpSetError(side, msg) {
+  var el = document.getElementById('cmp-error-' + side);
+  if (!el) return;
+  el.textContent = msg;
+  el.hidden = !msg;
+}
+
 function fmtTs(d) {
   var p = function(n) { return String(n).padStart(2, '0'); };
   return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) +
@@ -268,26 +275,50 @@ LogScope.initCompare = function() {
     var loadBtn = cmpEl(side, 'load');
     if (loadBtn) {
       loadBtn.addEventListener('click', function() {
+        cmpSetError(side, '');
+
         var path = cmpEl(side, 'path') ? cmpEl(side, 'path').value.trim() : '';
-        if (!path) { alert('Veuillez saisir un chemin de fichier.'); return; }
-        LogScope.showLoader('Lecture du fichier...');
+        if (!path) { cmpSetError(side, 'Renseignez le chemin du fichier.'); return; }
+
+        // Vérification de la clé SSH
+        var keyEl = document.getElementById('cmp-shared-key');
+        var keyContent = keyEl ? (keyEl.dataset.keyContent || '') : '';
+        var host = document.getElementById('cmp-shared-host') ? document.getElementById('cmp-shared-host').value.trim() : '';
+
+        if (host && !keyContent) {
+          cmpSetError(side, '⚠️ Clé SSH non chargée — cliquez sur 📂 pour sélectionner votre fichier .pem');
+          return;
+        }
+
         var token = LogScope.getAuthToken ? LogScope.getAuthToken() : '';
+        if (!token) { cmpSetError(side, '⚠️ Session expirée — reconnectez-vous.'); return; }
+
+        LogScope.showLoader('Connexion SSH à ' + (host || 'local') + '…');
+
         fetch(CMP_SERVICE, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': token ? 'Bearer ' + token : ''
+            'Authorization': 'Bearer ' + token
           },
           body: JSON.stringify(sharedPayload(path))
         }).then(function(resp) {
-          if (!resp.ok) throw new Error('Erreur ' + resp.status + ' ' + resp.statusText);
+          if (!resp.ok) {
+            return resp.text().then(function(body) {
+              throw new Error(body || ('Erreur HTTP ' + resp.status));
+            });
+          }
           return resp.text();
         }).then(function(text) {
           LogScope.hideLoader();
+          if (!text || !text.trim()) {
+            cmpSetError(side, 'Fichier reçu mais vide — vérifiez le chemin et les permissions.');
+            return;
+          }
           LogScope.loadCmpSide(side, text, path);
         }).catch(function(err) {
           LogScope.hideLoader();
-          alert(err.message);
+          cmpSetError(side, '❌ ' + err.message);
         });
       });
     }
