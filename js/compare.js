@@ -37,10 +37,11 @@ function sharedPayload(path) {
   var host = document.getElementById('cmp-shared-host') ? document.getElementById('cmp-shared-host').value.trim() : '';
   var port = document.getElementById('cmp-shared-port') ? document.getElementById('cmp-shared-port').value.trim() || '22' : '22';
   var user = document.getElementById('cmp-shared-user') ? document.getElementById('cmp-shared-user').value.trim() : '';
-  var key  = document.getElementById('cmp-shared-key')  ? document.getElementById('cmp-shared-key').value.trim()  : '';
+  var keyEl = document.getElementById('cmp-shared-key');
+  var keyContent = keyEl ? (keyEl.dataset.keyContent || keyEl.value.trim()) : '';
   var sudo = document.getElementById('cmp-shared-sudo') ? document.getElementById('cmp-shared-sudo').checked : false;
   var payload = { path: path, sudo: sudo };
-  if (host) { payload.host = host; payload.port = port; payload.user = user; payload.keyPath = key; }
+  if (host) { payload.host = host; payload.port = port; payload.user = user; payload.keyContent = keyContent; }
   return payload;
 }
 
@@ -270,9 +271,13 @@ LogScope.initCompare = function() {
         var path = cmpEl(side, 'path') ? cmpEl(side, 'path').value.trim() : '';
         if (!path) { alert('Veuillez saisir un chemin de fichier.'); return; }
         LogScope.showLoader('Lecture du fichier...');
+        var token = LogScope.getAuthToken ? LogScope.getAuthToken() : '';
         fetch(CMP_SERVICE, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token ? 'Bearer ' + token : ''
+          },
           body: JSON.stringify(sharedPayload(path))
         }).then(function(resp) {
           if (!resp.ok) throw new Error('Erreur ' + resp.status + ' ' + resp.statusText);
