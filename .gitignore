@@ -1,0 +1,35 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# Node (si vous ajoutez un build plus tard)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Logs locaux (ne pas committer de vrais logs de production)
+*.log
+!samples/*.log
+
+# Build / dist (si ajouté plus tard)
+dist/
+build/
+.cache/
+
+# Environnement
+.env
+.env.local
+
+# Base SQLite locale
+data/

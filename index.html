@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LogScope — Analyseur de logs Odoo</title>
+  <meta name="description" content="Analyseur de logs Odoo 100% local : filtres, workers, timeline, export." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     AUTH OVERLAY  (login + register)
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="auth-logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0A0E1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v18h18" />
+          <path d="M7 14l4-4 4 4 5-5" />
+        </svg>
+      </div>
+      <div class="auth-logo-text">Log<span>Scope</span></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" type="button">Connexion</button>
+      <button class="auth-tab" id="tabRegister" type="button">Créer un compte</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form class="auth-form active" id="loginForm" autocomplete="off">
+      <div class="auth-field">
+        <label for="loginUser">Identifiant</label>
+        <input id="loginUser" type="text" autocomplete="username" placeholder="admin" />
+      </div>
+      <div class="auth-field">
+        <label for="loginPass">Mot de passe</label>
+        <div class="auth-password-wrap">
+          <input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••" />
+          <button class="auth-eye" type="button" tabindex="-1" data-target="loginPass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="auth-error" id="loginError"></div>
+      <button class="auth-submit" type="submit">Se connecter</button>
+      <div class="auth-hint">Compte par défaut : <strong>admin</strong> / <strong>logscope123</strong></div>
+    </form>
+
+    <!-- REGISTER FORM -->
+    <form class="auth-form" id="registerForm" autocomplete="off">
+      <div class="auth-field">
+        <label for="regUser">Identifiant</label>
+        <input id="regUser" type="text" autocomplete="username" placeholder="ex: jean.dupont" />
+        <span class="auth-field-hint">3-32 caractères, lettres, chiffres, _ . -</span>
+      </div>
+      <div class="auth-field">
+        <label for="regPass">Mot de passe</label>
+        <div class="auth-password-wrap">
+          <input id="regPass" type="password" autocomplete="new-password" placeholder="6 caractères minimum" />
+          <button class="auth-eye" type="button" tabindex="-1" data-target="regPass">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="auth-field">
+        <label for="regPassConfirm">Confirmer le mot de passe</label>
+        <div class="auth-password-wrap">
+          <input id="regPassConfirm" type="password" autocomplete="new-password" placeholder="Répéter le mot de passe" />
+          <button class="auth-eye" type="button" tabindex="-1" data-target="regPassConfirm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="auth-error" id="registerError"></div>
+      <div class="auth-success" id="registerSuccess"></div>
+      <button class="auth-submit" type="submit">Créer le compte</button>
+      <div class="auth-hint">Les nouveaux comptes ont un accès <strong>utilisateur</strong> standard.</div>
+    </form>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     TOPBAR
+════════════════════════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#0A0E1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 3v18h18" />
+        <path d="M7 14l4-4 4 4 5-5" />
+      </svg>
+    </div>
+    <div>
+      <h1>Log<span>Scope</span></h1>
+      <div class="tagline">Analyseur de logs Odoo</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="auth-pill" id="authUser" hidden></div>
+    <button class="btn btn-admin" id="adminPanelBtn" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Admin
+    </button>
+    <button class="btn btn-secondary" id="compareToggleBtn" style="font-size:12px;padding:6px 14px;">⇔ Vue comparative</button>
+    <div class="topbar-status" id="topbarStatus">
+      <span><span class="dot"></span><span id="statusText">Aucun fichier chargé</span></span>
+    </div>
+    <button class="btn btn-secondary" id="logoutBtn" hidden style="font-size:12px;padding:6px 14px;">Déconnexion</button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     ADMIN PANEL
+════════════════════════════════════════════════════════════════════════════ -->
+<div class="admin-panel" id="adminPanel" hidden>
+  <div class="admin-inner">
+
+    <!-- Header -->
+    <div class="admin-header">
+      <div>
+        <h2 class="admin-title">Administration</h2>
+        <p class="admin-subtitle">Gérez les utilisateurs et leurs accès à LogScope.</p>
+      </div>
+      <button class="btn btn-secondary" id="adminCloseBtn" style="font-size:12px;padding:6px 16px;">✕ Fermer</button>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="admin-stats" id="adminStats"></div>
+
+    <!-- Create user form -->
+    <div class="admin-section">
+      <h3 class="admin-section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        Créer un utilisateur
+      </h3>
+      <form class="admin-create-form" id="adminCreateForm">
+        <div class="admin-create-fields">
+          <div class="admin-field">
+            <label>Identifiant</label>
+            <input class="input" id="newUserName" type="text" placeholder="nom.prenom" />
+          </div>
+          <div class="admin-field">
+            <label>Mot de passe</label>
+            <input class="input" id="newUserPass" type="password" placeholder="6 caractères min." />
+          </div>
+          <div class="admin-field">
+            <label>Rôle</label>
+            <select class="input" id="newUserRole">
+              <option value="user">Utilisateur</option>
+              <option value="admin">Administrateur</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="submit" style="align-self:flex-end;">Créer</button>
+        </div>
+        <div class="admin-error" id="createUserError"></div>
+        <div class="admin-success" id="createUserSuccess"></div>
+      </form>
+    </div>
+
+    <!-- Users table -->
+    <div class="admin-section">
+      <div class="admin-section-header">
+        <h3 class="admin-section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Utilisateurs
+        </h3>
+        <button class="btn btn-secondary btn-small" id="refreshUsersBtn" type="button">↻ Rafraîchir</button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="adminUsersTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Identifiant</th>
+              <th>Rôle</th>
+              <th>Créé le</th>
+              <th>Dernière connexion</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminUsersBody">
+            <tr><td colspan="6" class="admin-loading">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     APP MAIN
+════════════════════════════════════════════════════════════════════════════ -->
+<main id="appMain">
+
+  <!-- UPLOAD ZONE -->
+  <div class="upload-zone" id="uploadZone">
+    <input type="file" id="fileInput" accept=".log,.txt" hidden />
+    <div class="upload-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="12" y1="18" x2="12" y2="12"/>
+        <line x1="9" y1="15" x2="15" y2="15"/>
+      </svg>
+    </div>
+    <h2>Glissez un fichier .log ici</h2>
+    <p>Ou cliquez pour sélectionner un fichier depuis votre ordinateur</p>
+    <button class="btn" id="browseBtn">Parcourir les fichiers</button>
+    <div class="field" style="margin-top:18px; display:grid; gap:8px;">
+      <label for="pathInput" style="font-size:0.9rem; color:var(--text-2);">Chemin du fichier de log à analyser</label>
+      <input class="input" id="pathInput" type="text" placeholder="Ex: /var/log/odoo/odoo.log" />
+      <div style="display:grid; gap:8px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <input class="input" id="remoteHost" type="text" placeholder="Hôte SSH distant" />
+          <input class="input" id="remotePort" type="text" placeholder="Port SSH (22)" />
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <input class="input" id="sshUser" type="text" placeholder="Utilisateur SSH" />
+          <input class="input" id="sshKeyPath" type="text" placeholder="Chemin clé SSH locale" />
+        </div>
+        <label class="check" style="align-items:center; gap:10px; margin-top:8px;">
+          <input type="checkbox" id="useSudo" />
+          <span>Lire le fichier avec sudo via le service local</span>
+        </label>
+      </div>
+      <button class="btn btn-secondary" id="loadPathBtn" type="button">Charger depuis le service local</button>
+    </div>
+    <div class="hint">Format supporté : logs Odoo standard. Pour une lecture distante, renseignez l&apos;hôte SSH, le port, l&apos;utilisateur, la clé SSH et le chemin de log. Le service local doit accepter ces paramètres et peut exécuter sudo si nécessaire.</div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard" id="dashboard">
+
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <div class="content-grid">
+
+      <!-- FILTERS -->
+      <aside class="filters">
+        <div class="filter-group">
+          <h3>Format</h3>
+          <select class="input" id="formatSelect">
+            <option value="auto">Auto (détection)</option>
+            <option value="odoo">Odoo</option>
+            <option value="postgres">PostgreSQL</option>
+            <option value="syslog">Syslog (Ubuntu)</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <h3>Recherche</h3>
+          <input type="text" class="input" id="searchInput" placeholder="Rechercher dans le message..." />
+        </div>
+
+        <div class="filter-group">
+          <h3>Plage de dates</h3>
+          <div class="field">
+            <div class="input-label">Début</div>
+            <input type="datetime-local" class="input" id="dateStart" step="1" />
+          </div>
+          <div class="field">
+            <div class="input-label">Fin</div>
+            <input type="datetime-local" class="input" id="dateEnd" step="1" />
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h3>PID</h3>
+          <input type="text" class="input" id="pidInput" placeholder="ex: 643418" />
+        </div>
+
+        <div class="filter-group">
+          <h3>Source</h3>
+          <select class="input" id="sourceSelect"><option value="">— Toutes —</option></select>
+        </div>
+
+        <div class="filter-group">
+          <h3 id="dbFilterLabel">Base de données</h3>
+          <select class="input" id="dbSelect"><option value="">— Toutes —</option></select>
+        </div>
+
+        <div class="filter-group">
+          <h3>Niveau</h3>
+          <div id="levelCheckboxes"></div>
+        </div>
+
+        <div class="filter-group">
+          <h3>Logger</h3>
+          <select class="input" id="loggerSelect"><option value="">— Tous —</option></select>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top: 8px;">
+          <button class="btn-secondary" id="resetBtn" style="flex:1">Réinitialiser</button>
+          <button class="btn-primary" id="newFileBtn" style="flex:1">Nouveau fichier</button>
+        </div>
+      </aside>
+
+      <!-- MAIN PANEL -->
+      <div>
+        <div class="tabs">
+          <div class="tab active" data-tab="logs">Logs <span class="count" id="tabLogsCount">0</span></div>
+          <div class="tab" data-tab="workers">Workers <span class="count" id="tabWorkersCount">0</span></div>
+          <div class="tab" data-tab="timeline">Timeline</div>
+          <div class="tab" data-tab="gantt">Gantt</div>
+          <div class="tab" data-tab="pids">PIDs <span class="count" id="tabPidsCount">0</span></div>
+        </div>
+
+        <!-- LOGS TAB -->
+        <div class="tab-panel active" data-panel="logs">
+          <div class="toolbar">
+            <div class="toolbar-info">
+              <strong id="resultsCount">0</strong> résultat(s) sur <span id="totalCount">0</span>
+            </div>
+            <div class="toolbar-actions">
+              <button class="btn-secondary" id="addFileBtn">Ajouter un fichier</button>
+              <button class="btn-secondary" id="filterLocksBtn">Locks</button>
+              <button class="btn-secondary" id="exportCsvBtn">Export CSV</button>
+              <button class="btn-secondary" id="exportJsonBtn">Export JSON</button>
+            </div>
+          </div>
+          <div class="log-table">
+            <div class="log-table-header">
+              <div>Timestamp</div>
+              <div>PID</div>
+              <div>Niveau</div>
+              <div>Logger</div>
+              <div>Message</div>
+              <div>Source</div>
+            </div>
+            <div id="logRows"></div>
+            <div class="pagination" id="pagination"></div>
+          </div>
+        </div>
+
+        <!-- WORKERS TAB -->
+        <div class="tab-panel" data-panel="workers">
+          <div class="toolbar">
+            <div class="toolbar-info">
+              Durée de vie des workers détectés — cliquez pour voir les logs associés
+            </div>
+          </div>
+          <div class="workers-grid" id="workersGrid"></div>
+        </div>
+
+        <!-- TIMELINE TAB -->
+        <div class="tab-panel" data-panel="timeline">
+          <div class="timeline-panel">
+            <canvas class="timeline-canvas" id="timelineCanvas"></canvas>
+            <div class="timeline-legend">
+              <div class="lg-item"><div class="lg-swatch" style="background:var(--critical)"></div>CRITICAL</div>
+              <div class="lg-item"><div class="lg-swatch" style="background:var(--error)"></div>ERROR</div>
+              <div class="lg-item"><div class="lg-swatch" style="background:var(--warning)"></div>WARNING</div>
+              <div class="lg-item"><div class="lg-swatch" style="background:var(--info)"></div>INFO</div>
+              <div class="lg-item"><div class="lg-swatch" style="background:var(--debug)"></div>DEBUG</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GANTT TAB -->
+        <div class="tab-panel" data-panel="gantt">
+          <div class="timeline-panel">
+            <div class="gantt-header">
+              <div>Diagramme de Gantt des PIDs/Workers filtrés (maximum 20 éléments).</div>
+              <div class="gantt-controls">
+                <button class="btn btn-secondary btn-small" id="resetPidFilter">Réinitialiser filtre PID</button>
+              </div>
+              <div class="gantt-note">Cliquez sur une barre pour filtrer par PID, ou sur un PID dans les cartes.</div>
+              <div class="gantt-legend">
+                <span><span style="background:#FF6B6B;"></span>CRITICAL</span>
+                <span><span style="background:#FFA726;"></span>ERROR</span>
+                <span><span style="background:#FFEB3B;"></span>WARNING</span>
+                <span><span style="background:#4CAF50;"></span>INFO</span>
+                <span><span style="background:#2196F3;"></span>DEBUG</span>
+              </div>
+            </div>
+            <canvas class="gantt-canvas" id="ganttCanvas"></canvas>
+          </div>
+        </div>
+
+        <!-- PIDS TAB -->
+        <div class="tab-panel" data-panel="pids">
+          <div class="toolbar">
+            <div class="toolbar-info">
+              Tous les PID détectés avec leur durée d'activité et distribution d'erreurs
+            </div>
+          </div>
+          <div class="workers-grid" id="pidsGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     VUE COMPARATIVE
+════════════════════════════════════════════════════════════════════════════ -->
+<div id="compareSection">
+  <div class="cmp-shared-bar">
+    <span class="cmp-shared-label">Connexion SSH</span>
+    <input class="input cmp-input" id="cmp-shared-host" type="text" placeholder="Hôte SSH" />
+    <input class="input cmp-input" style="width:80px" id="cmp-shared-port" type="text" placeholder="Port (22)" />
+    <input class="input cmp-input" id="cmp-shared-user" type="text" placeholder="Utilisateur" />
+    <input class="input cmp-input" id="cmp-shared-key"  type="text" placeholder="Clé SSH (chemin local)" />
+    <label class="cmp-sudo-label"><input type="checkbox" id="cmp-shared-sudo" /> sudo</label>
+  </div>
+  <div class="cmp-body">
+    <div class="cmp-side">
+      <div class="cmp-panel-bar">
+        <div class="cmp-title-row">
+          <span class="cmp-title-name" id="cmp-title-left">Panneau gauche</span>
+          <span class="cmp-count" id="cmp-count-left"></span>
+          <span class="cmp-result" id="cmp-result-left"></span>
+        </div>
+        <div class="cmp-load-row">
+          <input class="input cmp-input" id="cmp-path-left" type="text" placeholder="/var/log/odoo/openprod.log" style="flex:1" />
+          <button class="btn btn-primary cmp-btn" id="cmp-load-left">Charger SSH</button>
+          <button class="btn cmp-btn" id="cmp-browse-left">Local</button>
+          <input type="file" id="cmp-file-left" hidden accept=".log,.txt" />
+        </div>
+        <div class="cmp-filter-row">
+          <label class="cmp-tz-label">UTC<input class="input cmp-input cmp-tz" type="number" id="cmp-tz-left" value="0" min="-14" max="14" step="0.5" />h</label>
+          <input class="input cmp-input cmp-search" id="cmp-search-left" type="text" placeholder="Rechercher..." />
+          <input class="input cmp-input" type="datetime-local" id="cmp-date-start-left" />
+          <input class="input cmp-input" type="datetime-local" id="cmp-date-end-left" />
+        </div>
+        <div id="cmp-levels-left" class="cmp-levels"></div>
+      </div>
+      <div class="cmp-col-header">
+        <span>Timestamp</span><span>Niveau</span><span>PID</span><span>Message</span>
+      </div>
+      <div class="cmp-log-area" id="cmp-rows-left"></div>
+      <div class="cmp-pagination" id="cmp-pag-left"></div>
+    </div>
+    <div class="cmp-divider"></div>
+    <div class="cmp-side">
+      <div class="cmp-panel-bar">
+        <div class="cmp-title-row">
+          <span class="cmp-title-name" id="cmp-title-right">Panneau droit</span>
+          <span class="cmp-count" id="cmp-count-right"></span>
+          <span class="cmp-result" id="cmp-result-right"></span>
+        </div>
+        <div class="cmp-load-row">
+          <input class="input cmp-input" id="cmp-path-right" type="text" placeholder="/var/log/postgresql/postgresql-12-main.log" style="flex:1" />
+          <button class="btn btn-primary cmp-btn" id="cmp-load-right">Charger SSH</button>
+          <button class="btn cmp-btn" id="cmp-browse-right">Local</button>
+          <input type="file" id="cmp-file-right" hidden accept=".log,.txt" />
+        </div>
+        <div class="cmp-filter-row">
+          <label class="cmp-tz-label">UTC<input class="input cmp-input cmp-tz" type="number" id="cmp-tz-right" value="0" min="-14" max="14" step="0.5" />h</label>
+          <input class="input cmp-input cmp-search" id="cmp-search-right" type="text" placeholder="Rechercher..." />
+          <input class="input cmp-input" type="datetime-local" id="cmp-date-start-right" />
+          <input class="input cmp-input" type="datetime-local" id="cmp-date-end-right" />
+        </div>
+        <div id="cmp-levels-right" class="cmp-levels"></div>
+      </div>
+      <div class="cmp-col-header">
+        <span>Timestamp</span><span>Niveau</span><span>PID</span><span>Message</span>
+      </div>
+      <div class="cmp-log-area" id="cmp-rows-right"></div>
+      <div class="cmp-pagination" id="cmp-pag-right"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     MODALS
+════════════════════════════════════════════════════════════════════════════ -->
+
+<!-- Modal détail log -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="close" id="modalCloseBtn">✕</button>
+    <h2 id="modalTitle"></h2>
+    <div class="meta" id="modalMeta"></div>
+    <pre id="modalContent"></pre>
+  </div>
+</div>
+
+<!-- Modal ajouter un fichier -->
+<div class="modal-overlay" id="addFileModal">
+  <div class="modal" style="width:560px; max-width:100%;">
+    <button class="close" id="addFileModalClose">✕</button>
+    <h2 style="margin-bottom:18px;">Ajouter un fichier de log</h2>
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <button class="btn btn-primary" id="addFileBrowseBtn" style="width:100%;">Parcourir les fichiers</button>
+      <input type="file" id="addFileInput" accept=".log,.txt" hidden />
+      <div style="display:flex; align-items:center; gap:10px; color:var(--text-3); font-size:13px;">
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+        <span>ou via le service local</span>
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+      </div>
+      <input class="input" id="addFilePathInput" type="text" placeholder="Chemin du fichier (ex: /var/log/postgresql/...)" />
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <input class="input" id="addFileHost" type="text" placeholder="Hôte SSH distant" />
+        <input class="input" id="addFilePort" type="text" placeholder="Port SSH (22)" />
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <input class="input" id="addFileSshUser" type="text" placeholder="Utilisateur SSH" />
+        <input class="input" id="addFileSshKey" type="text" placeholder="Chemin clé SSH locale" />
+      </div>
+      <label class="check" style="display:flex; align-items:center; gap:10px;">
+        <input type="checkbox" id="addFileSudo" />
+        <span style="font-size:13px;">Lire le fichier avec sudo via le service local</span>
+      </label>
+      <button class="btn btn-primary" id="addFileLoadBtn" style="width:100%;">Charger depuis le service local</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal reset mot de passe admin -->
+<div class="modal-overlay" id="resetPassModal">
+  <div class="modal" style="width:420px; max-width:100%;">
+    <button class="close" id="resetPassModalClose">✕</button>
+    <h2 style="margin-bottom:6px;">Réinitialiser le mot de passe</h2>
+    <p id="resetPassTarget" style="color:var(--text-2);font-size:13px;margin-bottom:18px;"></p>
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <div class="admin-field">
+        <label>Nouveau mot de passe</label>
+        <input class="input" id="resetPassInput" type="password" placeholder="6 caractères minimum" />
+      </div>
+      <div class="admin-error" id="resetPassError"></div>
+      <div class="admin-success" id="resetPassSuccess"></div>
+      <button class="btn btn-primary" id="resetPassConfirmBtn" style="width:100%;">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loader -->
+<div class="loader" id="loader">
+  <div class="spinner"></div>
+  <div class="text" id="loaderText">Analyse du fichier...</div>
+</div>
+
+<!-- Scripts -->
+<script src="js/constants.js"></script>
+<script src="js/state.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/formats/odoo.js"></script>
+<script src="js/formats/postgres.js"></script>
+<script src="js/formats/syslog.js"></script>
+<script src="js/formats/detector.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/filters.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/workers.js"></script>
+<script src="js/timeline.js"></script>
+<script src="js/export.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/compare.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

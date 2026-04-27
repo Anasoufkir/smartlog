@@ -1,0 +1,19 @@
+{
+  "name": "logscope",
+  "version": "1.0.0",
+  "description": "> Un analyseur de logs multi-formats, 100% local, dans le navigateur.",
+  "main": "local-log-service.js",
+  "scripts": {
+    "start": "node local-log-service.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "ssh2": "^1.17.0"
+  }
+}

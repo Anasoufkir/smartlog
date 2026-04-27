@@ -1,0 +1,361 @@
+Apr 22 08:00:26 ubuntu-srv-01 dbus-daemon[768]: Started Session 940 of user root.
+Apr 22 08:01:25 ubuntu-srv-01 dbus-daemon[768]: Starting Daily apt upgrade and clean activities...
+Apr 22 08:01:41 ubuntu-srv-01 snapd[1412]: Device eth0 entered promiscuous mode
+Apr 22 08:02:18 ubuntu-srv-01 kernel: Starting Daily apt upgrade and clean activities...
+Apr 22 08:02:37 ubuntu-srv-01 apt-daily: Started Session 684 of user www-data.
+Apr 22 08:02:44 ubuntu-srv-01 apt-daily: Reloading.
+Apr 22 08:03:21 ubuntu-srv-01 apt-daily: Reloading.
+Apr 22 08:03:59 ubuntu-srv-01 dbus-daemon[768]: Connection refused to backend
+Apr 22 08:04:50 ubuntu-srv-01 NetworkManager[921]: Reloading.
+Apr 22 08:05:47 ubuntu-srv-01 apt-daily: snap "core22" has been updated
+Apr 22 08:06:14 ubuntu-srv-01 sshd[3016]: Started containerd container runtime.
+Apr 22 08:06:57 ubuntu-srv-01 snapd[1412]: Started containerd container runtime.
+Apr 22 08:07:02 ubuntu-srv-01 containerd[2301]: deprecated option used in config
+Apr 22 08:07:49 ubuntu-srv-01 sshd[3001]: snap "core22" has been updated
+Apr 22 08:08:19 ubuntu-srv-01 dbus-daemon[768]: Started Session 605 of user root.
+Apr 22 08:08:28 ubuntu-srv-01 kernel: Device eth0 entered promiscuous mode
+Apr 22 08:08:57 ubuntu-srv-01 sshd[3005]: New session 240 of user postgres.
+Apr 22 08:09:43 ubuntu-srv-01 apt-daily: Started containerd container runtime.
+Apr 22 08:09:49 ubuntu-srv-01 kernel: Reloading.
+Apr 22 08:10:43 ubuntu-srv-01 systemd[1]: New session 388 of user root.
+Apr 22 08:11:18 ubuntu-srv-01 cron[1201]: Started containerd container runtime.
+Apr 22 08:11:44 ubuntu-srv-01 containerd[2301]: Started Session 593 of user postgres.
+Apr 22 08:11:49 ubuntu-srv-01 systemd[1]: Out of memory: Killed process 3659 (systemd)
+Apr 22 08:12:28 ubuntu-srv-01 sshd[3010]: Starting Daily apt upgrade and clean activities...
+Apr 22 08:12:52 ubuntu-srv-01 apt-daily: Started Session 995 of user anas.
+Apr 22 08:13:33 ubuntu-srv-01 snapd[1412]: Started containerd container runtime.
+Apr 22 08:13:41 ubuntu-srv-01 containerd[2301]: process took longer than expected to start
+Apr 22 08:13:47 ubuntu-srv-01 containerd[2301]: Started containerd container runtime.
+Apr 22 08:14:21 ubuntu-srv-01 containerd[2301]: Started containerd container runtime.
+Apr 22 08:15:03 ubuntu-srv-01 apt-daily: deprecated option used in config
+Apr 22 08:15:26 ubuntu-srv-01 dbus-daemon[768]: deprecated option used in config
+Apr 22 08:16:19 ubuntu-srv-01 kernel: Reloading.
+Apr 22 08:16:21 ubuntu-srv-01 dbus-daemon[768]: process took longer than expected to start
+Apr 22 08:16:50 ubuntu-srv-01 kernel: deprecated option used in config
+Apr 22 08:16:57 ubuntu-srv-01 sshd[3007]: Reloading.
+Apr 22 08:17:28 ubuntu-srv-01 containerd[2301]: Connection refused to backend
+Apr 22 08:18:27 ubuntu-srv-01 sshd[3003]: Reloading.
+Apr 22 08:18:33 ubuntu-srv-01 snapd[1412]: process took longer than expected to start
+Apr 22 08:19:20 ubuntu-srv-01 snapd[1412]: Listening on D-Bus System Message Bus Socket.
+Apr 22 08:20:00 ubuntu-srv-01 containerd[2301]: process took longer than expected to start
+Apr 22 08:20:02 ubuntu-srv-01 cron[1201]: Started Session 639 of user anas.
+Apr 22 08:20:55 ubuntu-srv-01 snapd[1412]: Slow DNS query detected (took 1531 ms)
+Apr 22 08:21:28 ubuntu-srv-01 kernel: Started containerd container runtime.
+Apr 22 08:22:27 ubuntu-srv-01 cron[1201]: snap "core22" has been updated
+Apr 22 08:23:02 ubuntu-srv-01 apt-daily: Starting Daily apt upgrade and clean activities...
+Apr 22 08:23:52 ubuntu-srv-01 cron[1201]: Connection reset by peer, retrying
+Apr 22 08:24:28 ubuntu-srv-01 containerd[2301]: snap "core22" has been updated
+Apr 22 08:24:44 ubuntu-srv-01 apt-daily: Starting Daily apt upgrade and clean activities...
+Apr 22 08:25:20 ubuntu-srv-01 apt-daily: Started Session 553 of user www-data.
+Apr 22 08:26:05 ubuntu-srv-01 apt-daily: snap "core22" has been updated
+Apr 22 08:27:05 ubuntu-srv-01 apt-daily: Reloading.
+Apr 22 08:27:13 ubuntu-srv-01 cron[1201]: Started containerd container runtime.
+Apr 22 08:27:27 ubuntu-srv-01 snapd[1412]: Started Session 895 of user anas.
+Apr 22 08:27:44 ubuntu-srv-01 dbus-daemon[768]: process took longer than expected to start
+Apr 22 08:28:41 ubuntu-srv-01 sshd[3012]: Reloading.
+Apr 22 08:29:03 ubuntu-srv-01 apt-daily: Started containerd container runtime.
+Apr 22 08:29:25 ubuntu-srv-01 dbus-daemon[768]: snap "core22" has been updated
+Apr 22 08:29:59 ubuntu-srv-01 snapd[1412]: Started Session 215 of user anas.
+Apr 22 08:30:16 ubuntu-srv-01 sshd[3002]: Listening on D-Bus System Message Bus Socket.
+Apr 22 08:30:42 ubuntu-srv-01 snapd[1412]: snap "core22" has been updated
+Apr 22 08:30:46 ubuntu-srv-01 sshd[3008]: Connection reset by peer, retrying
+Apr 22 08:30:48 ubuntu-srv-01 sshd[3008]: New session 185 of user anas.
+Apr 22 08:31:44 ubuntu-srv-01 sshd[3008]: Starting Daily apt upgrade and clean activities...
+Apr 22 08:31:47 ubuntu-srv-01 NetworkManager[921]: Reloading.
+Apr 22 08:31:59 ubuntu-srv-01 NetworkManager[921]: New session 743 of user www-data.
+Apr 22 08:32:18 ubuntu-srv-01 apt-daily: Listening on D-Bus System Message Bus Socket.
+Apr 22 08:32:21 ubuntu-srv-01 systemd[1]: Reloading.
+Apr 22 08:32:28 ubuntu-srv-01 kernel: Device eth0 entered promiscuous mode
+Apr 22 08:33:01 ubuntu-srv-01 apt-daily: Reloading.
+Apr 22 08:33:27 ubuntu-srv-01 kernel: kernel panic - not syncing: Fatal exception
+Apr 22 08:34:08 ubuntu-srv-01 systemd[1]: New session 541 of user anas.
+Apr 22 08:34:51 ubuntu-srv-01 systemd[1]: deprecated option used in config
+Apr 22 08:34:54 ubuntu-srv-01 kernel: Listening on D-Bus System Message Bus Socket.
+Apr 22 08:35:18 ubuntu-srv-01 systemd[1]: Connection refused to backend
+Apr 22 08:36:15 ubuntu-srv-01 kernel: Started containerd container runtime.
+Apr 22 08:36:21 ubuntu-srv-01 dbus-daemon[768]: Reloading.
+Apr 22 08:37:14 ubuntu-srv-01 sshd[3008]: Device eth0 entered promiscuous mode
+Apr 22 08:37:34 ubuntu-srv-01 snapd[1412]: Reloading.
+Apr 22 08:38:21 ubuntu-srv-01 snapd[1412]: kernel panic - not syncing: Fatal exception
+Apr 22 08:39:14 ubuntu-srv-01 cron[1201]: process took longer than expected to start
+Apr 22 08:40:07 ubuntu-srv-01 cron[1201]: Reloading.
+Apr 22 08:40:48 ubuntu-srv-01 systemd[1]: Started Session 485 of user postgres.
+Apr 22 08:41:29 ubuntu-srv-01 apt-daily: Reloading.
+Apr 22 08:42:21 ubuntu-srv-01 systemd[1]: Started Session 775 of user root.
+Apr 22 08:43:13 ubuntu-srv-01 containerd[2301]: New session 340 of user anas.
+Apr 22 08:43:45 ubuntu-srv-01 kernel: Slow DNS query detected (took 2462 ms)
+Apr 22 08:44:25 ubuntu-srv-01 NetworkManager[921]: Reloading.
+Apr 22 08:45:07 ubuntu-srv-01 dbus-daemon[768]: New session 736 of user anas.
+Apr 22 08:45:11 ubuntu-srv-01 systemd[1]: Started Session 808 of user anas.
+Apr 22 08:45:57 ubuntu-srv-01 containerd[2301]: snap "core22" has been updated
+Apr 22 08:46:10 ubuntu-srv-01 sshd[3017]: Started Session 584 of user root.
+Apr 22 08:46:15 ubuntu-srv-01 NetworkManager[921]: process took longer than expected to start
+Apr 22 08:47:14 ubuntu-srv-01 snapd[1412]: error: could not open /var/lib/example: Permission denied
+Apr 22 08:47:20 ubuntu-srv-01 sshd[3018]: New session 468 of user anas.
+Apr 22 08:48:17 ubuntu-srv-01 apt-daily: Started containerd container runtime.
+Apr 22 08:48:19 ubuntu-srv-01 containerd[2301]: snap "core22" has been updated
+Apr 22 08:49:06 ubuntu-srv-01 snapd[1412]: Started containerd container runtime.
+Apr 22 08:49:07 ubuntu-srv-01 sshd[3010]: Started containerd container runtime.
+Apr 22 08:49:53 ubuntu-srv-01 sshd[3006]: New session 359 of user www-data.
+Apr 22 08:50:18 ubuntu-srv-01 sshd[3012]: Emergency mode activated due to disk failure
+Apr 22 08:51:07 ubuntu-srv-01 dbus-daemon[768]: Starting Daily apt upgrade and clean activities...
+Apr 22 08:51:48 ubuntu-srv-01 systemd[1]: error: could not open /var/lib/example: Permission denied
+Apr 22 08:52:21 ubuntu-srv-01 NetworkManager[921]: Started containerd container runtime.
+Apr 22 08:53:20 ubuntu-srv-01 systemd[1]: Connection reset by peer, retrying
+Apr 22 08:53:49 ubuntu-srv-01 systemd[1]: Listening on D-Bus System Message Bus Socket.
+Apr 22 08:54:48 ubuntu-srv-01 containerd[2301]: error: could not open /var/lib/example: Permission denied
+Apr 22 08:55:15 ubuntu-srv-01 cron[1201]: New session 361 of user www-data.
+Apr 22 08:55:35 ubuntu-srv-01 snapd[1412]: Device eth0 entered promiscuous mode
+Apr 22 08:55:49 ubuntu-srv-01 cron[1201]: snap "core22" has been updated
+Apr 22 08:56:38 ubuntu-srv-01 containerd[2301]: Listening on D-Bus System Message Bus Socket.
+Apr 22 08:56:50 ubuntu-srv-01 kernel: Started Session 426 of user anas.
+Apr 22 08:57:42 ubuntu-srv-01 dbus-daemon[768]: Starting Daily apt upgrade and clean activities...
+Apr 22 08:58:30 ubuntu-srv-01 snapd[1412]: Device eth0 entered promiscuous mode
+Apr 22 08:58:48 ubuntu-srv-01 systemd[1]: Started containerd container runtime.
+Apr 22 08:59:46 ubuntu-srv-01 sshd[3008]: Device eth0 entered promiscuous mode
+Apr 22 09:00:41 ubuntu-srv-01 snapd[1412]: Slow DNS query detected (took 1021 ms)
+Apr 22 09:01:27 ubuntu-srv-01 systemd[1]: process took longer than expected to start
+Apr 22 09:01:32 ubuntu-srv-01 containerd[2301]: snap "core22" has been updated
+Apr 22 09:01:42 ubuntu-srv-01 sshd[3007]: Started Session 945 of user postgres.
+Apr 22 09:02:32 ubuntu-srv-01 sshd[3017]: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:03:13 ubuntu-srv-01 NetworkManager[921]: Device eth0 entered promiscuous mode
+Apr 22 09:03:33 ubuntu-srv-01 sshd[3002]: Reloading.
+Apr 22 09:03:34 ubuntu-srv-01 kernel: snap "core22" has been updated
+Apr 22 09:04:08 ubuntu-srv-01 kernel: Reloading.
+Apr 22 09:04:10 ubuntu-srv-01 NetworkManager[921]: Device eth0 entered promiscuous mode
+Apr 22 09:05:10 ubuntu-srv-01 kernel: snap "core22" has been updated
+Apr 22 09:05:54 ubuntu-srv-01 snapd[1412]: Starting Daily apt upgrade and clean activities...
+Apr 22 09:06:08 ubuntu-srv-01 apt-daily: Reloading.
+Apr 22 09:06:23 ubuntu-srv-01 kernel: New session 211 of user postgres.
+Apr 22 09:06:55 ubuntu-srv-01 cron[1201]: Starting Daily apt upgrade and clean activities...
+Apr 22 09:07:09 ubuntu-srv-01 snapd[1412]: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:07:35 ubuntu-srv-01 systemd[1]: Started containerd container runtime.
+Apr 22 09:07:57 ubuntu-srv-01 sshd[3005]: snap "core22" has been updated
+Apr 22 09:08:19 ubuntu-srv-01 snapd[1412]: Started Session 102 of user root.
+Apr 22 09:08:42 ubuntu-srv-01 NetworkManager[921]: Started Session 674 of user anas.
+Apr 22 09:09:32 ubuntu-srv-01 snapd[1412]: process took longer than expected to start
+Apr 22 09:09:45 ubuntu-srv-01 systemd[1]: snap "core22" has been updated
+Apr 22 09:09:47 ubuntu-srv-01 dbus-daemon[768]: Reloading.
+Apr 22 09:09:50 ubuntu-srv-01 systemd[1]: Starting Daily apt upgrade and clean activities...
+Apr 22 09:10:12 ubuntu-srv-01 sshd[3019]: Started containerd container runtime.
+Apr 22 09:11:12 ubuntu-srv-01 NetworkManager[921]: Starting Daily apt upgrade and clean activities...
+Apr 22 09:11:19 ubuntu-srv-01 systemd[1]: snap "core22" has been updated
+Apr 22 09:12:12 ubuntu-srv-01 NetworkManager[921]: snap "core22" has been updated
+Apr 22 09:12:51 ubuntu-srv-01 NetworkManager[921]: Started containerd container runtime.
+Apr 22 09:13:04 ubuntu-srv-01 sshd[3016]: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:13:35 ubuntu-srv-01 sshd[3001]: Started containerd container runtime.
+Apr 22 09:13:52 ubuntu-srv-01 sshd[3002]: Reloading.
+Apr 22 09:14:04 ubuntu-srv-01 containerd[2301]: Device eth0 entered promiscuous mode
+Apr 22 09:14:54 ubuntu-srv-01 apt-daily: deprecated option used in config
+Apr 22 09:15:11 ubuntu-srv-01 NetworkManager[921]: Reloading.
+Apr 22 09:15:27 ubuntu-srv-01 cron[1201]: Reloading.
+Apr 22 09:15:43 ubuntu-srv-01 snapd[1412]: Reloading.
+Apr 22 09:15:50 ubuntu-srv-01 containerd[2301]: Reloading.
+Apr 22 09:16:47 ubuntu-srv-01 dbus-daemon[768]: Started Session 151 of user anas.
+Apr 22 09:17:11 ubuntu-srv-01 kernel: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:17:52 ubuntu-srv-01 systemd[1]: Started containerd container runtime.
+Apr 22 09:18:02 ubuntu-srv-01 dbus-daemon[768]: New session 139 of user anas.
+Apr 22 09:18:29 ubuntu-srv-01 systemd[1]: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:18:32 ubuntu-srv-01 sshd[3006]: process took longer than expected to start
+Apr 22 09:19:23 ubuntu-srv-01 snapd[1412]: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:20:08 ubuntu-srv-01 cron[1201]: New session 783 of user www-data.
+Apr 22 09:20:28 ubuntu-srv-01 snapd[1412]: Started containerd container runtime.
+Apr 22 09:21:10 ubuntu-srv-01 systemd[1]: Device eth0 entered promiscuous mode
+Apr 22 09:21:38 ubuntu-srv-01 snapd[1412]: Started Session 515 of user www-data.
+Apr 22 09:21:47 ubuntu-srv-01 containerd[2301]: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:22:27 ubuntu-srv-01 sshd[3018]: error: could not open /var/lib/example: Permission denied
+Apr 22 09:22:46 ubuntu-srv-01 cron[1201]: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:23:35 ubuntu-srv-01 snapd[1412]: Connection reset by peer, retrying
+Apr 22 09:24:34 ubuntu-srv-01 cron[1201]: Starting Daily apt upgrade and clean activities...
+Apr 22 09:25:19 ubuntu-srv-01 sshd[3019]: Connection reset by peer, retrying
+Apr 22 09:26:13 ubuntu-srv-01 snapd[1412]: Reloading.
+Apr 22 09:26:38 ubuntu-srv-01 apt-daily: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:27:21 ubuntu-srv-01 systemd[1]: Slow DNS query detected (took 2096 ms)
+Apr 22 09:28:03 ubuntu-srv-01 containerd[2301]: Reloading.
+Apr 22 09:28:36 ubuntu-srv-01 dbus-daemon[768]: Starting Daily apt upgrade and clean activities...
+Apr 22 09:29:05 ubuntu-srv-01 containerd[2301]: process took longer than expected to start
+Apr 22 09:29:12 ubuntu-srv-01 containerd[2301]: Started containerd container runtime.
+Apr 22 09:29:45 ubuntu-srv-01 sshd[3014]: Starting Daily apt upgrade and clean activities...
+Apr 22 09:30:35 ubuntu-srv-01 sshd[3010]: Started Session 155 of user postgres.
+Apr 22 09:31:30 ubuntu-srv-01 cron[1201]: Started Session 298 of user anas.
+Apr 22 09:32:22 ubuntu-srv-01 containerd[2301]: error: could not open /var/lib/example: Permission denied
+Apr 22 09:33:16 ubuntu-srv-01 kernel: New session 262 of user www-data.
+Apr 22 09:33:26 ubuntu-srv-01 NetworkManager[921]: snap "core22" has been updated
+Apr 22 09:33:47 ubuntu-srv-01 apt-daily: Reloading.
+Apr 22 09:34:31 ubuntu-srv-01 cron[1201]: Device eth0 entered promiscuous mode
+Apr 22 09:34:35 ubuntu-srv-01 sshd[3016]: Started containerd container runtime.
+Apr 22 09:34:52 ubuntu-srv-01 apt-daily: Emergency mode activated due to disk failure
+Apr 22 09:35:17 ubuntu-srv-01 dbus-daemon[768]: Emergency mode activated due to disk failure
+Apr 22 09:36:06 ubuntu-srv-01 dbus-daemon[768]: Reloading.
+Apr 22 09:36:26 ubuntu-srv-01 NetworkManager[921]: Started containerd container runtime.
+Apr 22 09:36:36 ubuntu-srv-01 systemd[1]: Device eth0 entered promiscuous mode
+Apr 22 09:37:08 ubuntu-srv-01 systemd[1]: Starting Daily apt upgrade and clean activities...
+Apr 22 09:37:28 ubuntu-srv-01 systemd[1]: Started containerd container runtime.
+Apr 22 09:38:06 ubuntu-srv-01 snapd[1412]: Started containerd container runtime.
+Apr 22 09:38:07 ubuntu-srv-01 cron[1201]: error: could not open /var/lib/example: Permission denied
+Apr 22 09:38:14 ubuntu-srv-01 cron[1201]: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:38:15 ubuntu-srv-01 snapd[1412]: Started containerd container runtime.
+Apr 22 09:38:31 ubuntu-srv-01 apt-daily: Starting Daily apt upgrade and clean activities...
+Apr 22 09:38:57 ubuntu-srv-01 apt-daily: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:39:07 ubuntu-srv-01 systemd[1]: Device eth0 entered promiscuous mode
+Apr 22 09:39:12 ubuntu-srv-01 apt-daily: Starting Daily apt upgrade and clean activities...
+Apr 22 09:39:37 ubuntu-srv-01 apt-daily: process took longer than expected to start
+Apr 22 09:39:52 ubuntu-srv-01 containerd[2301]: Out of memory: Killed process 4805 (containerd)
+Apr 22 09:40:14 ubuntu-srv-01 systemd[1]: deprecated option used in config
+Apr 22 09:40:58 ubuntu-srv-01 NetworkManager[921]: deprecated option used in config
+Apr 22 09:41:55 ubuntu-srv-01 kernel: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:42:43 ubuntu-srv-01 kernel: error: could not open /var/lib/example: Permission denied
+Apr 22 09:43:22 ubuntu-srv-01 snapd[1412]: snap "core22" has been updated
+Apr 22 09:44:09 ubuntu-srv-01 systemd[1]: New session 908 of user anas.
+Apr 22 09:44:46 ubuntu-srv-01 snapd[1412]: error: could not open /var/lib/example: Permission denied
+Apr 22 09:44:54 ubuntu-srv-01 systemd[1]: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:44:57 ubuntu-srv-01 systemd[1]: Starting Daily apt upgrade and clean activities...
+Apr 22 09:45:52 ubuntu-srv-01 systemd[1]: Started containerd container runtime.
+Apr 22 09:46:08 ubuntu-srv-01 snapd[1412]: Started Session 134 of user root.
+Apr 22 09:46:39 ubuntu-srv-01 sshd[3009]: Started Session 910 of user anas.
+Apr 22 09:47:01 ubuntu-srv-01 NetworkManager[921]: Starting Daily apt upgrade and clean activities...
+Apr 22 09:47:47 ubuntu-srv-01 NetworkManager[921]: deprecated option used in config
+Apr 22 09:48:42 ubuntu-srv-01 apt-daily: Starting Daily apt upgrade and clean activities...
+Apr 22 09:49:16 ubuntu-srv-01 systemd[1]: deprecated option used in config
+Apr 22 09:50:02 ubuntu-srv-01 systemd[1]: Slow DNS query detected (took 2853 ms)
+Apr 22 09:50:30 ubuntu-srv-01 NetworkManager[921]: Reloading.
+Apr 22 09:51:02 ubuntu-srv-01 systemd[1]: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:51:39 ubuntu-srv-01 apt-daily: Connection refused to backend
+Apr 22 09:52:11 ubuntu-srv-01 kernel: Started Session 602 of user root.
+Apr 22 09:52:18 ubuntu-srv-01 dbus-daemon[768]: Device eth0 entered promiscuous mode
+Apr 22 09:52:42 ubuntu-srv-01 snapd[1412]: New session 538 of user anas.
+Apr 22 09:53:12 ubuntu-srv-01 snapd[1412]: Starting Daily apt upgrade and clean activities...
+Apr 22 09:54:08 ubuntu-srv-01 apt-daily: deprecated option used in config
+Apr 22 09:54:53 ubuntu-srv-01 containerd[2301]: Connection reset by peer, retrying
+Apr 22 09:55:35 ubuntu-srv-01 dbus-daemon[768]: Connection reset by peer, retrying
+Apr 22 09:55:55 ubuntu-srv-01 kernel: Connection reset by peer, retrying
+Apr 22 09:56:34 ubuntu-srv-01 kernel: Listening on D-Bus System Message Bus Socket.
+Apr 22 09:57:21 ubuntu-srv-01 kernel: kernel panic - not syncing: Fatal exception
+Apr 22 09:57:31 ubuntu-srv-01 kernel: Out of memory: Killed process 5872 (kernel)
+Apr 22 09:57:44 ubuntu-srv-01 snapd[1412]: Started Session 387 of user anas.
+Apr 22 09:57:47 ubuntu-srv-01 snapd[1412]: Device eth0 entered promiscuous mode
+Apr 22 09:58:17 ubuntu-srv-01 apt-daily: New session 718 of user postgres.
+Apr 22 09:59:16 ubuntu-srv-01 systemd[1]: process took longer than expected to start
+Apr 22 09:59:58 ubuntu-srv-01 kernel: Device eth0 entered promiscuous mode
+Apr 22 10:00:14 ubuntu-srv-01 sshd[3013]: Connection reset by peer, retrying
+Apr 22 10:00:44 ubuntu-srv-01 snapd[1412]: Device eth0 entered promiscuous mode
+Apr 22 10:01:09 ubuntu-srv-01 dbus-daemon[768]: Slow DNS query detected (took 656 ms)
+Apr 22 10:01:20 ubuntu-srv-01 NetworkManager[921]: Reloading.
+Apr 22 10:01:50 ubuntu-srv-01 sshd[3018]: snap "core22" has been updated
+Apr 22 10:02:17 ubuntu-srv-01 dbus-daemon[768]: snap "core22" has been updated
+Apr 22 10:03:04 ubuntu-srv-01 snapd[1412]: Out of memory: Killed process 1927 (snapd)
+Apr 22 10:03:29 ubuntu-srv-01 NetworkManager[921]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:04:07 ubuntu-srv-01 snapd[1412]: Reloading.
+Apr 22 10:04:59 ubuntu-srv-01 apt-daily: authentication failure; logname= uid=0 euid=0 tty=ssh
+Apr 22 10:05:08 ubuntu-srv-01 kernel: Failed to start kernel service
+Apr 22 10:05:50 ubuntu-srv-01 kernel: Reloading.
+Apr 22 10:06:20 ubuntu-srv-01 dbus-daemon[768]: Emergency mode activated due to disk failure
+Apr 22 10:07:11 ubuntu-srv-01 containerd[2301]: deprecated option used in config
+Apr 22 10:07:55 ubuntu-srv-01 NetworkManager[921]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:08:37 ubuntu-srv-01 dbus-daemon[768]: snap "core22" has been updated
+Apr 22 10:08:47 ubuntu-srv-01 sshd[3011]: authentication failure; logname= uid=0 euid=0 tty=ssh
+Apr 22 10:09:40 ubuntu-srv-01 systemd[1]: Started containerd container runtime.
+Apr 22 10:10:21 ubuntu-srv-01 apt-daily: Starting Daily apt upgrade and clean activities...
+Apr 22 10:11:00 ubuntu-srv-01 NetworkManager[921]: Listening on D-Bus System Message Bus Socket.
+Apr 22 10:11:23 ubuntu-srv-01 cron[1201]: Connection reset by peer, retrying
+Apr 22 10:12:03 ubuntu-srv-01 apt-daily: Slow DNS query detected (took 2746 ms)
+Apr 22 10:12:35 ubuntu-srv-01 NetworkManager[921]: Started Session 859 of user postgres.
+Apr 22 10:12:43 ubuntu-srv-01 sshd[3017]: Reloading.
+Apr 22 10:13:19 ubuntu-srv-01 containerd[2301]: snap "core22" has been updated
+Apr 22 10:13:30 ubuntu-srv-01 kernel: Starting Daily apt upgrade and clean activities...
+Apr 22 10:14:13 ubuntu-srv-01 containerd[2301]: snap "core22" has been updated
+Apr 22 10:14:25 ubuntu-srv-01 snapd[1412]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:14:58 ubuntu-srv-01 dbus-daemon[768]: Listening on D-Bus System Message Bus Socket.
+Apr 22 10:15:20 ubuntu-srv-01 snapd[1412]: Started containerd container runtime.
+Apr 22 10:15:39 ubuntu-srv-01 apt-daily: Device eth0 entered promiscuous mode
+Apr 22 10:16:02 ubuntu-srv-01 NetworkManager[921]: process took longer than expected to start
+Apr 22 10:16:58 ubuntu-srv-01 apt-daily: Reloading.
+Apr 22 10:17:11 ubuntu-srv-01 sshd[3010]: New session 230 of user root.
+Apr 22 10:17:58 ubuntu-srv-01 systemd[1]: Device eth0 entered promiscuous mode
+Apr 22 10:18:05 ubuntu-srv-01 snapd[1412]: Reloading.
+Apr 22 10:18:45 ubuntu-srv-01 systemd[1]: Started Session 317 of user root.
+Apr 22 10:18:52 ubuntu-srv-01 containerd[2301]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:19:48 ubuntu-srv-01 systemd[1]: deprecated option used in config
+Apr 22 10:20:00 ubuntu-srv-01 NetworkManager[921]: Started containerd container runtime.
+Apr 22 10:20:37 ubuntu-srv-01 systemd[1]: Started Session 892 of user postgres.
+Apr 22 10:20:42 ubuntu-srv-01 snapd[1412]: Device eth0 entered promiscuous mode
+Apr 22 10:21:18 ubuntu-srv-01 containerd[2301]: snap "core22" has been updated
+Apr 22 10:21:19 ubuntu-srv-01 systemd[1]: Started Session 979 of user root.
+Apr 22 10:21:28 ubuntu-srv-01 kernel: New session 836 of user anas.
+Apr 22 10:22:28 ubuntu-srv-01 containerd[2301]: Listening on D-Bus System Message Bus Socket.
+Apr 22 10:22:58 ubuntu-srv-01 NetworkManager[921]: New session 153 of user root.
+Apr 22 10:22:59 ubuntu-srv-01 systemd[1]: Slow DNS query detected (took 2093 ms)
+Apr 22 10:23:46 ubuntu-srv-01 NetworkManager[921]: snap "core22" has been updated
+Apr 22 10:24:23 ubuntu-srv-01 dbus-daemon[768]: snap "core22" has been updated
+Apr 22 10:24:47 ubuntu-srv-01 cron[1201]: error: could not open /var/lib/example: Permission denied
+Apr 22 10:25:12 ubuntu-srv-01 snapd[1412]: process took longer than expected to start
+Apr 22 10:25:30 ubuntu-srv-01 dbus-daemon[768]: Started containerd container runtime.
+Apr 22 10:26:08 ubuntu-srv-01 cron[1201]: Reloading.
+Apr 22 10:27:00 ubuntu-srv-01 snapd[1412]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:27:11 ubuntu-srv-01 NetworkManager[921]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:28:06 ubuntu-srv-01 cron[1201]: process took longer than expected to start
+Apr 22 10:28:41 ubuntu-srv-01 apt-daily: Device eth0 entered promiscuous mode
+Apr 22 10:29:25 ubuntu-srv-01 NetworkManager[921]: Reloading.
+Apr 22 10:30:00 ubuntu-srv-01 snapd[1412]: Started containerd container runtime.
+Apr 22 10:30:38 ubuntu-srv-01 kernel: New session 953 of user www-data.
+Apr 22 10:30:51 ubuntu-srv-01 containerd[2301]: Started Session 285 of user www-data.
+Apr 22 10:31:17 ubuntu-srv-01 dbus-daemon[768]: Connection reset by peer, retrying
+Apr 22 10:31:41 ubuntu-srv-01 systemd[1]: deprecated option used in config
+Apr 22 10:32:02 ubuntu-srv-01 sshd[3004]: Started containerd container runtime.
+Apr 22 10:32:16 ubuntu-srv-01 sshd[3001]: Emergency mode activated due to disk failure
+Apr 22 10:33:16 ubuntu-srv-01 kernel: process took longer than expected to start
+Apr 22 10:33:33 ubuntu-srv-01 containerd[2301]: deprecated option used in config
+Apr 22 10:33:39 ubuntu-srv-01 cron[1201]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:34:34 ubuntu-srv-01 containerd[2301]: Failed to start containerd service
+Apr 22 10:35:20 ubuntu-srv-01 snapd[1412]: Connection refused to backend
+Apr 22 10:36:02 ubuntu-srv-01 dbus-daemon[768]: Device eth0 entered promiscuous mode
+Apr 22 10:36:18 ubuntu-srv-01 cron[1201]: kernel panic - not syncing: Fatal exception
+Apr 22 10:36:41 ubuntu-srv-01 systemd[1]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:36:45 ubuntu-srv-01 NetworkManager[921]: Started containerd container runtime.
+Apr 22 10:37:23 ubuntu-srv-01 kernel: Started Session 582 of user www-data.
+Apr 22 10:37:48 ubuntu-srv-01 dbus-daemon[768]: snap "core22" has been updated
+Apr 22 10:38:40 ubuntu-srv-01 containerd[2301]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:39:40 ubuntu-srv-01 systemd[1]: Slow DNS query detected (took 2028 ms)
+Apr 22 10:39:47 ubuntu-srv-01 cron[1201]: authentication failure; logname= uid=0 euid=0 tty=ssh
+Apr 22 10:40:16 ubuntu-srv-01 systemd[1]: Connection refused to backend
+Apr 22 10:40:24 ubuntu-srv-01 kernel: Listening on D-Bus System Message Bus Socket.
+Apr 22 10:41:10 ubuntu-srv-01 systemd[1]: Listening on D-Bus System Message Bus Socket.
+Apr 22 10:41:37 ubuntu-srv-01 NetworkManager[921]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:41:54 ubuntu-srv-01 dbus-daemon[768]: Started containerd container runtime.
+Apr 22 10:42:27 ubuntu-srv-01 sshd[3004]: Reloading.
+Apr 22 10:42:44 ubuntu-srv-01 NetworkManager[921]: deprecated option used in config
+Apr 22 10:43:44 ubuntu-srv-01 NetworkManager[921]: Device eth0 entered promiscuous mode
+Apr 22 10:44:38 ubuntu-srv-01 cron[1201]: New session 247 of user root.
+Apr 22 10:45:11 ubuntu-srv-01 containerd[2301]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:45:39 ubuntu-srv-01 cron[1201]: Device eth0 entered promiscuous mode
+Apr 22 10:46:33 ubuntu-srv-01 cron[1201]: Reloading.
+Apr 22 10:47:27 ubuntu-srv-01 kernel: snap "core22" has been updated
+Apr 22 10:47:36 ubuntu-srv-01 cron[1201]: Reloading.
+Apr 22 10:47:41 ubuntu-srv-01 kernel: Device eth0 entered promiscuous mode
+Apr 22 10:48:03 ubuntu-srv-01 apt-daily: snap "core22" has been updated
+Apr 22 10:48:12 ubuntu-srv-01 snapd[1412]: deprecated option used in config
+Apr 22 10:48:15 ubuntu-srv-01 cron[1201]: Started containerd container runtime.
+Apr 22 10:48:49 ubuntu-srv-01 dbus-daemon[768]: Started containerd container runtime.
+Apr 22 10:49:26 ubuntu-srv-01 dbus-daemon[768]: Slow DNS query detected (took 1694 ms)
+Apr 22 10:49:55 ubuntu-srv-01 sshd[3015]: Listening on D-Bus System Message Bus Socket.
+Apr 22 10:50:35 ubuntu-srv-01 sshd[3007]: Started Session 419 of user www-data.
+Apr 22 10:50:37 ubuntu-srv-01 apt-daily: Reloading.
+Apr 22 10:51:22 ubuntu-srv-01 containerd[2301]: Started containerd container runtime.
+Apr 22 10:51:40 ubuntu-srv-01 cron[1201]: snap "core22" has been updated
+Apr 22 10:51:48 ubuntu-srv-01 sshd[3003]: Listening on D-Bus System Message Bus Socket.
+Apr 22 10:52:31 ubuntu-srv-01 kernel: Device eth0 entered promiscuous mode
+Apr 22 10:53:10 ubuntu-srv-01 snapd[1412]: Slow DNS query detected (took 2120 ms)
+Apr 22 10:53:32 ubuntu-srv-01 systemd[1]: Started containerd container runtime.
+Apr 22 10:54:27 ubuntu-srv-01 dbus-daemon[768]: Started containerd container runtime.
+Apr 22 10:55:23 ubuntu-srv-01 dbus-daemon[768]: Starting Daily apt upgrade and clean activities...
+Apr 22 10:55:28 ubuntu-srv-01 apt-daily: Reloading.
+Apr 22 10:55:55 ubuntu-srv-01 kernel: authentication failure; logname= uid=0 euid=0 tty=ssh
+Apr 22 10:55:58 ubuntu-srv-01 systemd[1]: deprecated option used in config
+Apr 22 10:56:38 ubuntu-srv-01 apt-daily: Started Session 632 of user root.
+Apr 22 10:56:41 ubuntu-srv-01 snapd[1412]: New session 455 of user anas.
+Apr 22 10:57:20 ubuntu-srv-01 sshd[3001]: Connection refused to backend
+Apr 22 10:57:58 ubuntu-srv-01 sshd[3014]: Listening on D-Bus System Message Bus Socket.
+Apr 22 10:58:55 ubuntu-srv-01 apt-daily: Device eth0 entered promiscuous mode
+Apr 22 10:59:43 ubuntu-srv-01 NetworkManager[921]: New session 959 of user postgres.
+Apr 22 10:59:56 ubuntu-srv-01 kernel: Started containerd container runtime.
+Apr 22 11:00:49 ubuntu-srv-01 containerd[2301]: Reloading.
