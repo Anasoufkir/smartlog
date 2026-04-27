@@ -396,12 +396,13 @@ window.LogScope = window.LogScope || {};
 
     LogScope.showLoader('Lecture du fichier depuis le service local...');
     try {
+      const keyContent = LogScope.getSshKeyContent('sshKeyPath');
       const payload = {
         path: logPath,
         host: host || undefined,
         port: host ? port : undefined,
         user: host ? sshUser : undefined,
-        keyPath: host ? sshKeyPath : undefined,
+        keyContent: host ? keyContent : undefined,
         sudo: document.getElementById('useSudo').checked
       };
       const res = await authenticatedFetch(LOCAL_LOG_SERVICE, {
@@ -563,7 +564,6 @@ window.LogScope = window.LogScope || {};
       const host    = document.getElementById('addFileHost').value.trim();
       const port    = document.getElementById('addFilePort').value.trim() || '22';
       const sshUser = document.getElementById('addFileSshUser').value.trim();
-      const sshKeyPath = document.getElementById('addFileSshKey').value.trim();
       if (host && !sshUser) { alert('Veuillez renseigner l\'utilisateur SSH.'); return; }
       document.getElementById('addFileModal').classList.remove('active');
       LogScope.showLoader('Lecture du fichier depuis le service local...');
@@ -571,7 +571,8 @@ window.LogScope = window.LogScope || {};
         const payload = {
           path: logPath,
           host: host || undefined, port: host ? port : undefined,
-          user: host ? sshUser : undefined, keyPath: host ? sshKeyPath : undefined,
+          user: host ? sshUser : undefined,
+          keyContent: host ? LogScope.getSshKeyContent('addFileSshKey') : undefined,
           sudo: document.getElementById('addFileSudo').checked
         };
         const res = await authenticatedFetch(LOCAL_LOG_SERVICE, {
@@ -609,6 +610,12 @@ window.LogScope = window.LogScope || {};
     document.getElementById('exportJsonBtn').addEventListener('click', () => LogScope.exportFiltered('json'));
     document.getElementById('reportBtn')?.addEventListener('click', () => LogScope.generateReport());
     document.getElementById('loadPathBtn').addEventListener('click', loadPathFromService);
+
+    // SSH key file pickers
+    LogScope.initSshKeyPicker('sshKeyBrowseBtn',          'sshKeyFilePicker',    'sshKeyPath');
+    LogScope.initSshKeyPicker('addFileSshKeyBrowseBtn',   'addFileSshKeyPicker', 'addFileSshKey');
+    LogScope.initSshKeyPicker('liveTailKeyBrowseBtn',     'liveTailKeyPicker',   'liveTailKey');
+    LogScope.initSshKeyPicker('cmpSharedKeyBrowseBtn',    'cmpSharedKeyPicker',  'cmp-shared-key');
 
     // Presets, live tail, annotations, alerts
     LogScope.initPresets();

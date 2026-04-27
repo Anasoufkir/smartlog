@@ -61,11 +61,11 @@ window.LogScope = window.LogScope || {};
 
   LogScope.startLiveTail = function () {
     const path    = document.getElementById('liveTailPath')?.value.trim();
-    const host    = document.getElementById('liveTailHost')?.value.trim();
-    const port    = document.getElementById('liveTailPort')?.value.trim() || '22';
-    const user    = document.getElementById('liveTailUser')?.value.trim();
-    const keyPath = document.getElementById('liveTailKey')?.value.trim();
-    const sudo    = document.getElementById('liveTailSudo')?.checked;
+    const host       = document.getElementById('liveTailHost')?.value.trim();
+    const port       = document.getElementById('liveTailPort')?.value.trim() || '22';
+    const user       = document.getElementById('liveTailUser')?.value.trim();
+    const keyContent = LogScope.getSshKeyContent ? LogScope.getSshKeyContent('liveTailKey') : '';
+    const sudo       = document.getElementById('liveTailSudo')?.checked;
     const fmt     = document.getElementById('liveTailFormat')?.value || 'auto';
 
     if (!path) { setStatus('Renseignez un chemin de fichier.', 'error'); return; }
@@ -74,10 +74,10 @@ window.LogScope = window.LogScope || {};
 
     const token = LogScope.getAuthToken ? LogScope.getAuthToken() : '';
     const params = new URLSearchParams({ path, token });
-    if (host)    params.set('host', host);
-    if (port)    params.set('port', port);
-    if (user)    params.set('user', user);
-    if (keyPath) params.set('keyPath', keyPath);
+    if (host)       params.set('host', host);
+    if (port)       params.set('port', port);
+    if (user)       params.set('user', user);
+    if (keyContent) params.set('keyContent', keyContent);
     if (sudo)    params.set('sudo', '1');
     if (fmt && fmt !== 'auto') params.set('format', fmt);
 

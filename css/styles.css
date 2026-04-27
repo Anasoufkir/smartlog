@@ -1471,3 +1471,37 @@ mark {
    PRESETS
 ══════════════════════════════════════════════════════════════ */
 #presetsSelect { font-size: 12px; }
+
+/* ══════════════════════════════════════════════════════════════
+   SSH KEY FILE BROWSER
+══════════════════════════════════════════════════════════════ */
+.ssh-key-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  min-width: 0;
+}
+.ssh-key-wrap .input {
+  border-radius: 8px 0 0 8px;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+.btn-key-browse {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  padding: 0 12px;
+  height: 38px;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text-2);
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.btn-key-browse:hover {
+  background: var(--surface);
+  color: var(--text);
+}

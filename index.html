@@ -235,7 +235,11 @@
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
           <input class="input" id="sshUser" type="text" placeholder="Utilisateur SSH" />
-          <input class="input" id="sshKeyPath" type="text" placeholder="Chemin clé SSH locale" />
+          <div class="ssh-key-wrap">
+            <input class="input" id="sshKeyPath" type="text" placeholder="Chemin clé SSH ou cliquez 📂" readonly />
+            <input type="file" id="sshKeyFilePicker" hidden accept=".pem,.key,.ppk,.rsa,*" />
+            <button class="btn-key-browse" type="button" id="sshKeyBrowseBtn" title="Choisir la clé SSH">📂</button>
+          </div>
         </div>
         <label class="check" style="align-items:center; gap:10px; margin-top:8px;">
           <input type="checkbox" id="useSudo" />
@@ -446,7 +450,11 @@
                 <input class="input" id="liveTailHost" type="text" placeholder="Hôte SSH (optionnel)" />
                 <input class="input" id="liveTailPort" type="text" placeholder="Port SSH (22)" style="width:100px" />
                 <input class="input" id="liveTailUser" type="text" placeholder="Utilisateur SSH" />
-                <input class="input" id="liveTailKey" type="text" placeholder="Clé SSH (chemin local)" />
+                <div class="ssh-key-wrap" style="flex:1">
+                  <input class="input" id="liveTailKey" type="text" placeholder="Clé SSH — cliquez 📂" readonly style="flex:1" />
+                  <input type="file" id="liveTailKeyPicker" hidden accept=".pem,.key,.ppk,.rsa,*" />
+                  <button class="btn-key-browse" type="button" id="liveTailKeyBrowseBtn" title="Choisir la clé SSH">📂</button>
+                </div>
                 <label class="check" style="white-space:nowrap;gap:6px"><input type="checkbox" id="liveTailSudo" /> sudo</label>
               </div>
               <div class="livetail-actions">
@@ -506,7 +514,11 @@
     <input class="input cmp-input" id="cmp-shared-host" type="text" placeholder="Hôte SSH" />
     <input class="input cmp-input" style="width:80px" id="cmp-shared-port" type="text" placeholder="Port (22)" />
     <input class="input cmp-input" id="cmp-shared-user" type="text" placeholder="Utilisateur" />
-    <input class="input cmp-input" id="cmp-shared-key"  type="text" placeholder="Clé SSH (chemin local)" />
+    <div class="ssh-key-wrap">
+      <input class="input cmp-input" id="cmp-shared-key" type="text" placeholder="Clé SSH — cliquez 📂" readonly />
+      <input type="file" id="cmpSharedKeyPicker" hidden accept=".pem,.key,.ppk,.rsa,*" />
+      <button class="btn-key-browse" type="button" id="cmpSharedKeyBrowseBtn" title="Choisir la clé SSH">📂</button>
+    </div>
     <label class="cmp-sudo-label"><input type="checkbox" id="cmp-shared-sudo" /> sudo</label>
   </div>
   <div class="cmp-body">
@@ -615,7 +627,11 @@
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
         <input class="input" id="addFileSshUser" type="text" placeholder="Utilisateur SSH" />
-        <input class="input" id="addFileSshKey" type="text" placeholder="Chemin clé SSH locale" />
+        <div class="ssh-key-wrap">
+          <input class="input" id="addFileSshKey" type="text" placeholder="Clé SSH — cliquez 📂" readonly />
+          <input type="file" id="addFileSshKeyPicker" hidden accept=".pem,.key,.ppk,.rsa,*" />
+          <button class="btn-key-browse" type="button" id="addFileSshKeyBrowseBtn" title="Choisir la clé SSH">📂</button>
+        </div>
       </div>
       <label class="check" style="display:flex; align-items:center; gap:10px;">
         <input type="checkbox" id="addFileSudo" />

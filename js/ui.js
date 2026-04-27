@@ -101,3 +101,46 @@ LogScope.initUploadZone = function (onFile) {
     if (e.target.files.length) onFile(e.target.files[0]);
   });
 };
+
+/**
+ * Wire up an SSH key file picker: clicking the browse button opens a file dialog,
+ * reads the key content, stores it on the text input as `dataset.keyContent`,
+ * and shows the file name in the input.
+ *
+ * @param {string} browseId   - id of the browse button
+ * @param {string} pickerId   - id of the hidden <input type="file">
+ * @param {string} displayId  - id of the text input to show the filename
+ */
+LogScope.initSshKeyPicker = function (browseId, pickerId, displayId) {
+  const browseBtn = document.getElementById(browseId);
+  const picker    = document.getElementById(pickerId);
+  const display   = document.getElementById(displayId);
+  if (!browseBtn || !picker || !display) return;
+
+  // Also allow clicking directly on the readonly text input
+  display.addEventListener('click', () => picker.click());
+  browseBtn.addEventListener('click', (e) => { e.stopPropagation(); picker.click(); });
+
+  picker.addEventListener('change', () => {
+    const file = picker.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      display.value = file.name;
+      display.dataset.keyContent = e.target.result;
+      display.title = `Clé chargée : ${file.name}`;
+    };
+    reader.readAsText(file);
+    picker.value = ''; // reset so same file can be re-selected
+  });
+};
+
+/**
+ * Return the SSH key content for a given display input id.
+ * Returns the dataset.keyContent if available, otherwise the raw value (legacy path).
+ */
+LogScope.getSshKeyContent = function (displayId) {
+  const el = document.getElementById(displayId);
+  if (!el) return null;
+  return el.dataset.keyContent || el.value.trim() || null;
+};

@@ -337,7 +337,7 @@ app.get('/read-log', (req, res) => {
 
 app.post('/read-log', requireAuth, async (req, res) => {
   try {
-    const { path: logPath, host, port, user, keyPath, sudo } = req.body;
+    const { path: logPath, host, port, user, keyPath, keyContent, sudo } = req.body;
 
     if (!logPath) return res.status(400).send('Le champ path est requis.');
 
@@ -346,16 +346,21 @@ app.post('/read-log', requireAuth, async (req, res) => {
       return res.send(content);
     }
 
-    if (!user || !keyPath) {
-      return res.status(400).send('host distant fourni mais user ou keyPath manquant.');
+    if (!user || (!keyPath && !keyContent)) {
+      return res.status(400).send('host distant fourni mais user ou clé SSH manquant.');
     }
 
-    if (!fs.existsSync(keyPath)) {
-      return res.status(400).send('La clé SSH locale est introuvable : ' + keyPath);
+    let privateKey;
+    if (keyContent) {
+      privateKey = keyContent;
+    } else {
+      if (!fs.existsSync(keyPath)) {
+        return res.status(400).send('La clé SSH locale est introuvable : ' + keyPath);
+      }
+      privateKey = fs.readFileSync(keyPath, 'utf8');
     }
 
     const conn = new Client();
-    const privateKey = fs.readFileSync(keyPath, 'utf8');
 
     conn.on('ready', () => {
       const command = sudo ? `sudo cat ${logPath}` : `cat ${logPath}`;
@@ -412,20 +417,21 @@ app.get('/live-tail', (req, res) => {
     res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
   };
 
-  const host    = req.query.host;
-  const port    = Number(req.query.port || 22);
-  const user    = req.query.user;
-  const keyPath = req.query.keyPath;
-  const sudo    = req.query.sudo === '1';
+  const host       = req.query.host;
+  const port       = Number(req.query.port || 22);
+  const user       = req.query.user;
+  const keyPath    = req.query.keyPath;
+  const keyContent = req.query.keyContent;
+  const sudo       = req.query.sudo === '1';
 
   if (host) {
     // SSH tail -f
-    if (!user || !keyPath || !fs.existsSync(keyPath)) {
+    const privateKey = keyContent || (keyPath && fs.existsSync(keyPath) ? fs.readFileSync(keyPath, 'utf8') : null);
+    if (!user || !privateKey) {
       send('error', { message: 'Clé SSH ou utilisateur manquant' });
       return res.end();
     }
     const conn = new Client();
-    const privateKey = fs.readFileSync(keyPath, 'utf8');
     conn.on('ready', () => {
       send('connected', { path: logPath, mode: 'ssh' });
       const cmd = (sudo ? 'sudo ' : '') + `tail -f -n 0 ${logPath}`;
