@@ -103,14 +103,34 @@ LogScope.renderLogRows = function () {
   document.getElementById('totalCount').textContent = state.entries.length.toLocaleString('fr');
   document.getElementById('resultsCount').textContent = state.filtered.length.toLocaleString('fr');
 
+  // Update sort button appearance
+  const sortBtn = document.getElementById('sortTimestampBtn');
+  if (sortBtn) {
+    sortBtn.dataset.order = state.sortOrder;
+    sortBtn.innerHTML = `Timestamp <span class="sort-arrow">${state.sortOrder === 'desc' ? '↓' : '↑'}</span>`;
+  }
+
+  // Apply sort order to a shallow copy (never mutate state.filtered)
+  const sorted = state.sortOrder === 'desc'
+    ? [...state.filtered].sort((a, b) => {
+        const ta = a.timestamp ? a.timestamp.getTime() : 0;
+        const tb = b.timestamp ? b.timestamp.getTime() : 0;
+        return tb - ta;
+      })
+    : [...state.filtered].sort((a, b) => {
+        const ta = a.timestamp ? a.timestamp.getTime() : 0;
+        const tb = b.timestamp ? b.timestamp.getTime() : 0;
+        return ta - tb;
+      });
+
   const container = document.getElementById('logRows');
-  const total = state.filtered.length;
+  const total = sorted.length;
   const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
   if (state.page > totalPages) state.page = totalPages;
 
   const start = (state.page - 1) * state.pageSize;
   const end = Math.min(start + state.pageSize, total);
-  const pageEntries = state.filtered.slice(start, end);
+  const pageEntries = sorted.slice(start, end);
 
   if (total === 0) {
     container.innerHTML = '<div class="empty-state">Aucun résultat ne correspond aux filtres.</div>';
@@ -159,6 +179,19 @@ LogScope.renderLogRows = function () {
   });
 
   LogScope.renderPagination(start, end, total, totalPages);
+
+  // Bind sort button once
+  if (!LogScope._sortBound) {
+    LogScope._sortBound = true;
+    const btn = document.getElementById('sortTimestampBtn');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        LogScope.state.sortOrder = LogScope.state.sortOrder === 'desc' ? 'asc' : 'desc';
+        LogScope.state.page = 1;
+        LogScope.renderLogRows();
+      });
+    }
+  }
 };
 
 /**

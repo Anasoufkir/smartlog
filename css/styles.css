@@ -354,6 +354,22 @@ main { max-width: 1600px; margin: 0 auto; padding: 28px; }
   color: var(--text-3);
   font-weight: 700;
 }
+
+.sort-col {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.15s;
+}
+.sort-col:hover { color: var(--accent); }
+
+.sort-arrow {
+  font-size: 11px;
+  color: var(--accent);
+  font-style: normal;
+}
 .log-row {
   display: grid;
   grid-template-columns: 180px 90px 90px 160px 1fr 120px;

@@ -14,6 +14,7 @@ LogScope.state = {
   page: 1,
   pageSize: LogScope.PAGE_SIZE,
   activeLevels: new Set(LogScope.LEVELS),
+  sortOrder: 'desc',  // 'asc' | 'desc' — applied to timestamp column
   fileName: '',
   sources: [],       // List of sources: { name, entries, workers, loggers, dbs, levelCounts }
   currentSource: null // Index of current source or null for all
@@ -33,5 +34,6 @@ LogScope.resetState = function () {
   LogScope.state.sources = [];
   LogScope.state.currentSource = null;
   LogScope.state.activeLevels = new Set(LogScope.LEVELS);
+  LogScope.state.sortOrder = 'desc';
   LogScope.state.fileName = '';
 };
