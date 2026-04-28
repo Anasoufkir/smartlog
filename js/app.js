@@ -14,18 +14,18 @@ window.LogScope = window.LogScope || {};
 
   // ── Auth helpers (exposed for admin.js) ───────────────────────────────────
 
-  function getAuthToken() { return sessionStorage.getItem(KEY_TOKEN); }
+  function getAuthToken() { return localStorage.getItem(KEY_TOKEN); }
   function isAuthenticated() { return Boolean(getAuthToken()); }
 
   function getCurrentUser() {
-    const username = sessionStorage.getItem(KEY_USER);
+    const username = localStorage.getItem(KEY_USER);
     if (!username) return null;
     // We need ID too; read from stored data
-    const raw = sessionStorage.getItem('logscopeAuthUserData');
+    const raw = localStorage.getItem('logscopeAuthUserData');
     if (raw) {
       try { return JSON.parse(raw); } catch (e) { /* */ }
     }
-    return { username, role: sessionStorage.getItem(KEY_ROLE) || 'user' };
+    return { username, role: localStorage.getItem(KEY_ROLE) || 'user' };
   }
 
   async function authenticatedFetch(url, options = {}) {
@@ -76,19 +76,19 @@ window.LogScope = window.LogScope || {};
   }
 
   function setAuthenticated(token, user) {
-    sessionStorage.setItem(KEY_TOKEN, token);
-    sessionStorage.setItem(KEY_USER, user.username);
-    sessionStorage.setItem(KEY_ROLE, user.role || 'user');
-    sessionStorage.setItem('logscopeAuthUserData', JSON.stringify(user));
+    localStorage.setItem(KEY_TOKEN, token);
+    localStorage.setItem(KEY_USER, user.username);
+    localStorage.setItem(KEY_ROLE, user.role || 'user');
+    localStorage.setItem('logscopeAuthUserData', JSON.stringify(user));
     hideOverlay();
     updateAuthUi(user);
   }
 
   function clearAuthentication() {
-    sessionStorage.removeItem(KEY_TOKEN);
-    sessionStorage.removeItem(KEY_USER);
-    sessionStorage.removeItem(KEY_ROLE);
-    sessionStorage.removeItem('logscopeAuthUserData');
+    localStorage.removeItem(KEY_TOKEN);
+    localStorage.removeItem(KEY_USER);
+    localStorage.removeItem(KEY_ROLE);
+    localStorage.removeItem('logscopeAuthUserData');
     updateAuthUi(null);
   }
 

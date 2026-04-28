@@ -23,15 +23,47 @@ const Anthropic = require('@anthropic-ai/sdk');
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 
-const DB_DIR = path.join(__dirname, 'data');
-const USERS_FILE = path.join(DB_DIR, 'users.json');
-const STATIC_ROOT = __dirname;
-const DEFAULT_USER = process.env.LOGSCOPE_ADMIN_USER || 'admin';
-const DEFAULT_PASS = process.env.LOGSCOPE_ADMIN_PASS || 'logscope123';
-const SESSION_TTL_MS = 24 * 60 * 60 * 1000;
+const DB_DIR        = path.join(__dirname, 'data');
+const USERS_FILE    = path.join(DB_DIR, 'users.json');
+const SESSIONS_FILE = path.join(DB_DIR, 'sessions.json');
+const STATIC_ROOT   = __dirname;
+const DEFAULT_USER  = process.env.LOGSCOPE_ADMIN_USER || 'admin';
+const DEFAULT_PASS  = process.env.LOGSCOPE_ADMIN_PASS || 'logscope123';
+const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 const sessions = new Map();
+
+// ── Session persistence ───────────────────────────────────────────────────────
+
+function loadPersistedSessions() {
+  try {
+    if (!fs.existsSync(SESSIONS_FILE)) return;
+    const data = JSON.parse(fs.readFileSync(SESSIONS_FILE, 'utf8'));
+    const now = Date.now();
+    let loaded = 0;
+    for (const [token, session] of Object.entries(data)) {
+      if (session.expiresAt > now) { sessions.set(token, session); loaded++; }
+    }
+    if (loaded > 0) console.log(`[sessions] ${loaded} session(s) restaurée(s) depuis le disque.`);
+  } catch { /* ignore corrupted file */ }
+}
+
+function persistSessions() {
+  try {
+    fs.mkdirSync(DB_DIR, { recursive: true });
+    const data = {};
+    for (const [token, session] of sessions.entries()) data[token] = session;
+    fs.writeFileSync(SESSIONS_FILE, JSON.stringify(data));
+  } catch { /* non-fatal */ }
+}
+
+// Persist every 60 s and on clean shutdown
+setInterval(persistSessions, 60_000).unref();
+process.on('SIGTERM', () => { persistSessions(); process.exit(0); });
+process.on('SIGINT',  () => { persistSessions(); process.exit(0); });
+
+loadPersistedSessions();
 
 // ── Utilitaires mot de passe ──────────────────────────────────────────────────
 

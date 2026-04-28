@@ -6,7 +6,7 @@
 window.LogScope = window.LogScope || {};
 
 (function () {
-  const API = 'http://localhost:3000';
+  const API = '';  // relative URL — works on any domain
   let cache = {}; // fileHash -> { entryIdx -> annotation }
   let currentFileHash = null;
 
