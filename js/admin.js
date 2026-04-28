@@ -3,7 +3,7 @@
  * Requires: window.LogScope.getAuthToken() and window.LogScope.authenticatedFetch()
  */
 (function () {
-  const API = 'http://localhost:3000';
+  const API = '';  // relative URL — works on any domain
 
   // Current user being reset (for modal)
   let resetTargetId = null;

@@ -6,7 +6,7 @@
 window.LogScope = window.LogScope || {};
 
 (function () {
-  const API_BASE = 'http://localhost:3000';
+  const API_BASE = '';   // relative — works on localhost:3000 and on any domain via Nginx
   const LOCAL_LOG_SERVICE = `${API_BASE}/read-log`;
   const KEY_TOKEN = 'logscopeAuthToken';
   const KEY_USER  = 'logscopeAuthUser';

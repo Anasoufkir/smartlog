@@ -2,7 +2,7 @@
  * LogScope — Rapport IA (analyse Claude Opus) + export PDF
  */
 (function () {
-  const API = 'http://localhost:3000';
+  const API = '';  // relative URL — works on any domain
   const MAX_SAMPLE_LINES = 300;
 
   let _currentReport  = null;
