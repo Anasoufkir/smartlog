@@ -10,10 +10,13 @@
 
   // ── Stats / samples builders ─────────────────────────────────────────────────
 
-  function buildStats(state) {
-    const entries     = state.entries || [];
-    const levelCounts = state.levelCounts || {};
-    const workers     = state.workers || {};
+  function buildStats(state, entries) {
+    entries = entries || state.entries || [];
+    const workers = state.workers || {};
+
+    // Level counts from filtered entries
+    const levelCounts = {};
+    entries.forEach(e => { if (e.level) levelCounts[e.level] = (levelCounts[e.level] || 0) + 1; });
 
     const errors = entries.filter(e => e.level === 'ERROR' || e.level === 'CRITICAL');
     const topErrors = {};
@@ -56,8 +59,8 @@
     };
   }
 
-  function buildSamples(state) {
-    const entries  = state.entries || [];
+  function buildSamples(entries) {
+    entries = entries || [];
     const critical = entries.filter(e => e.level === 'CRITICAL' || e.level === 'ERROR').slice(0, 100);
     const warnings = entries.filter(e => e.level === 'WARNING').slice(0, 50);
     const others   = entries.filter(e => e.level !== 'CRITICAL' && e.level !== 'ERROR' && e.level !== 'WARNING');
@@ -597,9 +600,18 @@
       loadingEl.hidden = false;
 
       try {
-        const stats   = buildStats(state);
-        const samples = buildSamples(state);
+        const filtered = (state.filtered && state.filtered.length > 0) ? state.filtered : state.entries;
+        const isFiltered = filtered !== state.entries && filtered.length < state.entries.length;
+        const stats   = buildStats(state, filtered);
+        const samples = buildSamples(filtered);
         _currentFilename = state.fileName || 'inconnu';
+        if (hintEl) {
+          hintEl.style.display = '';
+          hintEl.style.color = '';
+          hintEl.textContent = isFiltered
+            ? `Analyse de ${filtered.length.toLocaleString()} entrées filtrées (sur ${state.entries.length.toLocaleString()} au total)`
+            : `Analyse de ${filtered.length.toLocaleString()} entrées`;
+        }
 
         const res = await window.LogScope.authenticatedFetch(`${API}/ai/analyze`, {
           method: 'POST',

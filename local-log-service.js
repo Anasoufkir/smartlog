@@ -663,7 +663,7 @@ Génère le rapport JSON complet. Sois précis, pertinent et oriente chaque reco
   try {
     const message = await client.messages.create({
       model: 'claude-opus-4-7',
-      max_tokens: 4096,
+      max_tokens: 8192,
       thinking: { type: 'adaptive' },
       system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
       messages: [{ role: 'user', content: userContent }]
