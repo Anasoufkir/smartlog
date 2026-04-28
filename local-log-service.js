@@ -6,6 +6,20 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const { readFile } = require('fs/promises');
+const Anthropic = require('@anthropic-ai/sdk');
+
+// Load .env file
+(function loadEnv() {
+  const envPath = path.join(__dirname, '.env');
+  if (!fs.existsSync(envPath)) return;
+  fs.readFileSync(envPath, 'utf8').split('\n').forEach(line => {
+    const eq = line.indexOf('=');
+    if (eq < 1) return;
+    const key = line.slice(0, eq).trim();
+    const val = line.slice(eq + 1).trim();
+    if (key && !process.env[key]) process.env[key] = val;
+  });
+})();
 
 const app = express();
 app.use(cors());
@@ -546,6 +560,97 @@ app.post('/ingest', requireAuth, (req, res) => {
     fs.appendFileSync(file, content, 'utf8');
     console.log(`[ingest] ${lines.length} ligne(s) depuis ${source || 'inconnu'} → ${file}`);
     res.json({ ingested: lines.length, file });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Analyse IA ───────────────────────────────────────────────────────────────
+
+app.post('/ai/analyze', requireAuth, async (req, res) => {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return res.status(503).json({ error: 'Clé API Anthropic non configurée (ANTHROPIC_API_KEY manquant).' });
+  }
+
+  const { stats, samples, filename } = req.body;
+  if (!stats) return res.status(400).json({ error: 'Données de logs requises (stats).' });
+
+  const client = new Anthropic({ apiKey });
+
+  const systemPrompt = `Tu es un expert senior en analyse de logs de systèmes informatiques, spécialisé dans les applications Odoo ERP et les infrastructures Linux.
+Tu analyses des fichiers de logs et génères des rapports structurés, clairs et immédiatement exploitables pour les équipes techniques et les responsables IT.
+
+RÈGLE ABSOLUE : Tu dois TOUJOURS répondre avec un objet JSON valide et uniquement du JSON, sans texte avant ni après, sans bloc markdown.
+
+Structure JSON attendue :
+{
+  "resume_executif": "string (2-3 phrases, état global du système, ton professionnel)",
+  "score_sante": number (0 à 100, 100 = parfait, 0 = critique),
+  "incidents_critiques": [
+    {
+      "titre": "string (court, impactant)",
+      "description": "string (explication technique claire)",
+      "impact": "CRITIQUE|MAJEUR|MINEUR",
+      "timestamp": "string ou null",
+      "recommandation": "string (action concrète à effectuer)"
+    }
+  ],
+  "analyse_performances": {
+    "observations": ["string (constat observé)"],
+    "goulots": ["string (bottleneck identifié)"],
+    "workers": "string (état des workers/processus)"
+  },
+  "tendances": ["string (tendance ou pattern observé dans les logs)"],
+  "recommandations": [
+    {
+      "priorite": "HAUTE|MOYENNE|BASSE",
+      "action": "string (action à effectuer, verbe d'action)",
+      "detail": "string (explication et contexte)"
+    }
+  ],
+  "chronologie": [
+    {
+      "moment": "string (timestamp ou période)",
+      "evenement": "string (description de l'événement)",
+      "niveau": "CRITICAL|ERROR|WARNING|INFO"
+    }
+  ]
+}`;
+
+  const userContent = `Analyse le fichier de logs suivant : "${filename || 'inconnu'}"
+
+=== STATISTIQUES GLOBALES ===
+${JSON.stringify(stats, null, 2)}
+
+=== ÉCHANTILLONS DE LOGS ===
+${samples || 'Aucun échantillon fourni'}
+
+Génère le rapport JSON complet. Sois précis, pertinent et oriente chaque recommandation vers des actions concrètes.`;
+
+  try {
+    const message = await client.messages.create({
+      model: 'claude-opus-4-7',
+      max_tokens: 4096,
+      thinking: { type: 'adaptive' },
+      system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
+      messages: [{ role: 'user', content: userContent }]
+    });
+
+    const textBlock = message.content.find(b => b.type === 'text');
+    if (!textBlock) return res.status(500).json({ error: 'Réponse IA vide.' });
+
+    let report;
+    try {
+      const raw = textBlock.text.trim();
+      // Strip optional markdown code fences
+      const stripped = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+      report = JSON.parse(stripped);
+    } catch {
+      return res.status(500).json({ error: 'Impossible de parser la réponse IA.', raw: textBlock.text.slice(0, 500) });
+    }
+
+    res.json({ report, usage: message.usage });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

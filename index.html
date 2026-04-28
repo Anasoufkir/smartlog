@@ -350,6 +350,7 @@
           <div class="tab" data-tab="pids">PIDs <span class="count" id="tabPidsCount">0</span></div>
           <div class="tab tab-live" data-tab="livetail">⚡ Live</div>
           <div class="tab" data-tab="alerts">🔔 Alertes</div>
+          <div class="tab tab-ai" data-tab="ai-report">✨ Rapport IA</div>
         </div>
 
         <!-- LOGS TAB -->
@@ -475,6 +476,34 @@
               Les nouvelles lignes sont parsées et ajoutées en direct au tableau de logs.
               Les filtres actifs s'appliquent automatiquement.
             </div>
+          </div>
+        </div>
+
+        <!-- AI REPORT TAB -->
+        <div class="tab-panel" data-panel="ai-report">
+          <div class="ai-report-panel" id="aiReportPanel">
+            <div class="ai-report-intro">
+              <div class="ai-report-intro-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="40" height="40"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              </div>
+              <div>
+                <h3 class="ai-report-title">Analyse IA des logs</h3>
+                <p class="ai-report-desc">Générez un rapport structuré et pertinent en utilisant Claude Opus. L'IA analyse les patterns d'erreurs, les performances, les tendances et formule des recommandations concrètes.</p>
+              </div>
+            </div>
+            <div class="ai-report-actions">
+              <button class="btn btn-primary ai-report-generate-btn" id="aiGenerateBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Générer le rapport IA
+              </button>
+              <span class="ai-report-hint" id="aiReportHint">Chargez d'abord un fichier de logs</span>
+            </div>
+            <div class="ai-report-loading" id="aiReportLoading" hidden>
+              <div class="ai-spinner"></div>
+              <span>Analyse en cours par Claude Opus… cela peut prendre quelques secondes</span>
+            </div>
+            <div class="ai-report-error" id="aiReportError" hidden></div>
+            <div id="aiReportContent" hidden></div>
           </div>
         </div>
 
@@ -708,6 +737,7 @@
 <script src="js/annotations.js"></script>
 <script src="js/alerts.js"></script>
 <script src="js/anomaly.js"></script>
+<script src="js/ai-report.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
