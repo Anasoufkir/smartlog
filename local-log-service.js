@@ -673,13 +673,30 @@ Génère le rapport JSON complet. Sois précis, pertinent et oriente chaque reco
     if (!textBlock) return res.status(500).json({ error: 'Réponse IA vide.' });
 
     let report;
-    try {
-      const raw = textBlock.text.trim();
-      // Strip optional markdown code fences
-      const stripped = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
-      report = JSON.parse(stripped);
-    } catch {
-      return res.status(500).json({ error: 'Impossible de parser la réponse IA.', raw: textBlock.text.slice(0, 500) });
+    const rawText = textBlock.text.trim();
+    console.log('[AI] Réponse brute (200 premiers chars):', rawText.slice(0, 200));
+
+    // 1. Direct parse
+    try { report = JSON.parse(rawText); } catch {}
+
+    // 2. Extract from markdown code fence ```json ... ```
+    if (!report) {
+      const fenceMatch = rawText.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+      if (fenceMatch) { try { report = JSON.parse(fenceMatch[1].trim()); } catch {} }
+    }
+
+    // 3. Extract outermost JSON object { ... }
+    if (!report) {
+      const start = rawText.indexOf('{');
+      const end = rawText.lastIndexOf('}');
+      if (start !== -1 && end > start) {
+        try { report = JSON.parse(rawText.slice(start, end + 1)); } catch {}
+      }
+    }
+
+    if (!report) {
+      console.error('[AI] Échec parsing. Réponse brute complète:', rawText);
+      return res.status(500).json({ error: 'Impossible de parser la réponse IA.', raw: rawText.slice(0, 1000) });
     }
 
     res.json({ report, usage: message.usage });

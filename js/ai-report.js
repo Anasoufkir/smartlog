@@ -608,12 +608,17 @@
         });
 
         const data = await res.json();
-        if (!res.ok) throw new Error(data.error || `Erreur ${res.status}`);
+        if (!res.ok) {
+          let msg = data.error || `Erreur ${res.status}`;
+          if (data.raw) msg += `\n\nRéponse brute Claude :\n${data.raw}`;
+          throw new Error(msg);
+        }
 
         _currentReport = data.report;
         renderReport(data.report, contentEl, stats);
         contentEl.hidden = false;
       } catch (err) {
+        errorEl.style.whiteSpace = 'pre-wrap';
         errorEl.textContent = 'Erreur lors de l\'analyse : ' + err.message;
         errorEl.hidden = false;
       } finally {
