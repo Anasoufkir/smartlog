@@ -1637,6 +1637,30 @@ mark {
   gap: 20px;
 }
 
+.ai-report-toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ai-pdf-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 7px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.ai-pdf-btn:hover {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
 .ai-section {
   background: var(--surface-2);
   border: 1px solid var(--border);
