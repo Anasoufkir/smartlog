@@ -3,7 +3,7 @@
  */
 window.LogScope = window.LogScope || {};
 
-var CMP_SERVICE  = 'http://localhost:3000/read-log';
+var CMP_SERVICE  = '/read-log';
 var CMP_PAGE_SIZE = 50;
 
 function makeSide() {
