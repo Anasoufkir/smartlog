@@ -1,0 +1,18 @@
+services:
+  logscope:
+    build: .
+    image: logscope:local
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - LOGSCOPE_ADMIN_USER=${LOGSCOPE_ADMIN_USER:-admin}
+      - LOGSCOPE_ADMIN_PASS=${LOGSCOPE_ADMIN_PASS:?définissez un mot de passe admin dans .env}
+    volumes:
+      - logscope-data:/app/data
+      # Optionnel : donne accès en lecture à des logs de l'hôte pour /read-log
+      # - /var/log:/host-logs:ro
+
+volumes:
+  logscope-data:
