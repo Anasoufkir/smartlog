@@ -49,7 +49,7 @@ LogScope.LOG_REGEX = LogScope.ODOO_REGEX;
  *   (no timezone)           → 2024-01-15 10:30:45.123 [12345] postgres@mydb FATAL:  message
  *   (+HH:MM offset)         → 2024-01-15 10:30:45.123 +01:00 [12345] LOG:  message
  */
-LogScope.PG_REGEX = /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}[^\[]*)\[(\d+)(?:-\d+)?\]\s*:?\s*(?:\[\d+-\d+\]\s*)?(.*?)(PANIC|FATAL|ERROR|WARNING|NOTICE|INFO|LOG|DEBUG[1-5]?|STATEMENT|DETAIL|HINT|CONTEXT|QUERY|LOCATION):\s*(.*)$/;
+LogScope.PG_REGEX = /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}[^[]*)\[(\d+)(?:-\d+)?\]\s*:?\s*(?:\[\d+-\d+\]\s*)?(.*?)(PANIC|FATAL|ERROR|WARNING|NOTICE|INFO|LOG|DEBUG[1-5]?|STATEMENT|DETAIL|HINT|CONTEXT|QUERY|LOCATION):\s*(.*)$/;
 
 /**
  * Map PostgreSQL levels onto LogScope's normalized five-level scale.
@@ -81,7 +81,7 @@ LogScope.PG_LEVEL_MAP = {
  * Example:  Jan 15 10:30:45 hostname process[1234]: message
  * The year is absent in the line — we assume the current year.
  */
-LogScope.SYSLOG_REGEX = /^([A-Z][a-z]{2})\s+(\d{1,2})\s+(\d{1,2}):(\d{2}):(\d{2})\s+(\S+)\s+([^\[\s:][^\[\s:]*?)(?:\[(\d+)\])?:\s*(.*)$/;
+LogScope.SYSLOG_REGEX = /^([A-Z][a-z]{2})\s+(\d{1,2})\s+(\d{1,2}):(\d{2}):(\d{2})\s+(\S+)\s+([^[\s:][^[\s:]*?)(?:\[(\d+)\])?:\s*(.*)$/;
 
 LogScope.SYSLOG_MONTHS = {
   Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,

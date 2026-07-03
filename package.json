@@ -5,16 +5,26 @@
   "main": "local-log-service.js",
   "scripts": {
     "start": "node local-log-service.js",
+    "lint": "eslint js/ local-log-service.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "log-analysis",
+    "odoo",
+    "postgresql",
+    "syslog",
+    "log-viewer"
+  ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.91.1",
     "body-parser": "^2.2.2",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "ssh2": "^1.17.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.4"
   }
 }

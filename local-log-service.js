@@ -125,10 +125,6 @@ function findUserByUsername(username) {
   return readUsers().find(u => u.username === username) || null;
 }
 
-function findUserById(id) {
-  return readUsers().find(u => u.id === Number(id)) || null;
-}
-
 function touchLastLogin(userId) {
   const users = readUsers();
   writeUsers(users.map(u =>
@@ -182,6 +178,12 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+// Échappe un argument pour un shell POSIX (utilisé dans les commandes SSH `cat`/`tail`).
+// Empêche l'injection de commande via un chemin de fichier contenant des métacaractères.
+function shellQuote(str) {
+  return "'" + String(str).replace(/'/g, "'\\''") + "'";
+}
+
 ensureAuthDatabase();
 app.use(express.static(STATIC_ROOT));
 
@@ -233,7 +235,7 @@ app.post('/auth/register', (req, res) => {
   if (!username || !password) {
     return res.status(400).json({ error: 'Identifiant et mot de passe requis.' });
   }
-  if (!/^[a-zA-Z0-9_.\-]{3,32}$/.test(username)) {
+  if (!/^[a-zA-Z0-9_.-]{3,32}$/.test(username)) {
     return res.status(400).json({ error: 'Identifiant invalide (3-32 caractères alphanumérique).' });
   }
   if (password.length < 6) {
@@ -324,7 +326,7 @@ app.patch('/admin/users/:id/role', requireAdmin, (req, res) => {
   writeUsers(users);
 
   // Mettre à jour les sessions actives
-  for (const [token, session] of sessions.entries()) {
+  for (const session of sessions.values()) {
     if (session.userId === id) session.role = role;
   }
 
@@ -381,7 +383,10 @@ app.get('/read-log', (req, res) => {
   res.send('Endpoint /read-log attend une requête POST JSON. Exemple: {"path":"/var/log/app.log"}');
 });
 
-app.post('/read-log', requireAuth, async (req, res) => {
+// Réservé aux admins : donne accès en lecture à n'importe quel fichier du serveur
+// (local ou distant via SSH), ce qui serait une élévation de privilèges pour un
+// compte "user" auto-inscrit si ce n'était pas restreint.
+app.post('/read-log', requireAdmin, async (req, res) => {
   try {
     const { path: logPath, host, port, user, keyPath, keyContent, sudo } = req.body;
 
@@ -409,7 +414,7 @@ app.post('/read-log', requireAuth, async (req, res) => {
     const conn = new Client();
 
     conn.on('ready', () => {
-      const command = sudo ? `sudo cat ${logPath}` : `cat ${logPath}`;
+      const command = sudo ? `sudo cat ${shellQuote(logPath)}` : `cat ${shellQuote(logPath)}`;
       conn.exec(command, (err, stream) => {
         if (err) { conn.end(); return res.status(500).send('Erreur SSH : ' + err.message); }
 
@@ -444,11 +449,15 @@ app.post('/read-log', requireAuth, async (req, res) => {
 // ── Live tail (Server-Sent Events) ───────────────────────────────────────────
 
 app.get('/live-tail', (req, res) => {
-  // Auth via query param token (SSE can't set headers)
+  // Auth via query param token (SSE can't set headers). Réservé aux admins pour
+  // les mêmes raisons que /read-log : accès fichier arbitraire + exécution SSH.
   const token = req.query.token || '';
   const session = sessions.get(token);
   if (!session || session.expiresAt < Date.now()) {
     return res.status(401).send('Non autorisé');
+  }
+  if (session.role !== 'admin') {
+    return res.status(403).send('Accès réservé aux administrateurs.');
   }
 
   const logPath = req.query.path;
@@ -482,7 +491,7 @@ app.get('/live-tail', (req, res) => {
     const conn = new Client();
     conn.on('ready', () => {
       send('connected', { path: logPath, mode: 'ssh' });
-      const cmd = (sudo ? 'sudo ' : '') + `tail -f -n 0 ${logPath}`;
+      const cmd = (sudo ? 'sudo ' : '') + `tail -f -n 0 ${shellQuote(logPath)}`;
       conn.exec(cmd, (err, stream) => {
         if (err) { send('error', { message: err.message }); conn.end(); return; }
         stream.on('data', (chunk) => {

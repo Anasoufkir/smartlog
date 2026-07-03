@@ -6,7 +6,7 @@
 window.LogScope = window.LogScope || {};
 
 (function () {
-  const API = 'http://localhost:3000';
+  const API = '';   // relative — works on localhost:3000 and on any domain via Nginx
   let evtSource = null;
   let liveBuffer = [];
   let liveFormat = null;

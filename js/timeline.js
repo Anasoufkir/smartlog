@@ -186,7 +186,6 @@ LogScope.drawGantt = function () {
 
   const leftMargin = PADDING.left + labelWidth;
   const chartW = W - leftMargin - PADDING.right;
-  const chartH = H - PADDING.top - PADDING.bottom;
 
   // Header
   ctx.fillStyle = '#A7B0C2';

@@ -6,7 +6,6 @@
 window.LogScope = window.LogScope || {};
 
 (function () {
-  const NUM_LEVEL = { 10: 'DEBUG', 20: 'DEBUG', 30: 'INFO', 40: 'WARNING', 50: 'ERROR', 60: 'CRITICAL' };
   const STR_LEVEL = {
     trace: 'DEBUG', debug: 'DEBUG', verbose: 'DEBUG',
     info: 'INFO', notice: 'INFO', log: 'INFO',
