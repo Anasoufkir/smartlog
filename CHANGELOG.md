@@ -2,7 +2,7 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/). Les entrées antérieures à cet audit sont reconstituées à partir de l'historique Git réel (pas de tags de version dans le dépôt avant ce jour).
 
-## [Unreleased] — Audit d'exactitude et de sécurité
+## [1.1.0] — 2026-07-03 — Audit d'exactitude et de sécurité
 
 ### Fixed
 - **Sécurité (élévation de privilèges)** : `/read-log` et `/live-tail` exigent désormais un rôle `admin` — un compte auto-inscrit (`user`) pouvait auparavant lire n'importe quel fichier local du serveur.

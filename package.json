@@ -1,6 +1,6 @@
 {
   "name": "logscope",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "> Un analyseur de logs multi-formats, 100% local, dans le navigateur.",
   "main": "local-log-service.js",
   "scripts": {
