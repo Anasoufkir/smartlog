@@ -240,7 +240,7 @@ window.LogScope = window.LogScope || {};
       const confirm  = document.getElementById('regPassConfirm').value;
 
       if (!username || !password) { setRegisterError('Tous les champs sont requis.'); return; }
-      if (!/^[a-zA-Z0-9_.\-]{3,32}$/.test(username)) {
+      if (!/^[a-zA-Z0-9_.-]{3,32}$/.test(username)) {
         setRegisterError('Identifiant invalide : 3-32 caractères alphanumérique (a-z, 0-9, _ . -).');
         return;
       }
@@ -391,7 +391,6 @@ window.LogScope = window.LogScope || {};
     const host     = document.getElementById('remoteHost').value.trim();
     const port     = document.getElementById('remotePort').value.trim() || '22';
     const sshUser  = document.getElementById('sshUser').value.trim();
-    const sshKeyPath = document.getElementById('sshKeyPath').value.trim();
     if (host && !sshUser) { alert('Veuillez renseigner l\'utilisateur SSH.'); return; }
 
     const keyContent = LogScope.getSshKeyContent('sshKeyPath');

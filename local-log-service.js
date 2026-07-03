@@ -125,10 +125,6 @@ function findUserByUsername(username) {
   return readUsers().find(u => u.username === username) || null;
 }
 
-function findUserById(id) {
-  return readUsers().find(u => u.id === Number(id)) || null;
-}
-
 function touchLastLogin(userId) {
   const users = readUsers();
   writeUsers(users.map(u =>
@@ -239,7 +235,7 @@ app.post('/auth/register', (req, res) => {
   if (!username || !password) {
     return res.status(400).json({ error: 'Identifiant et mot de passe requis.' });
   }
-  if (!/^[a-zA-Z0-9_.\-]{3,32}$/.test(username)) {
+  if (!/^[a-zA-Z0-9_.-]{3,32}$/.test(username)) {
     return res.status(400).json({ error: 'Identifiant invalide (3-32 caractères alphanumérique).' });
   }
   if (password.length < 6) {
@@ -330,7 +326,7 @@ app.patch('/admin/users/:id/role', requireAdmin, (req, res) => {
   writeUsers(users);
 
   // Mettre à jour les sessions actives
-  for (const [token, session] of sessions.entries()) {
+  for (const session of sessions.values()) {
     if (session.userId === id) session.role = role;
   }
 

@@ -5,7 +5,6 @@
   const API = '';  // relative URL — works on any domain
   const MAX_SAMPLE_LINES = 300;
 
-  let _currentReport  = null;
   let _currentFilename = '';
 
   // ── Stats / samples builders ─────────────────────────────────────────────────
@@ -563,7 +562,7 @@
   </div>
 
 </div>
-<script>setTimeout(()=>window.print(),450);<\/script>
+<script>setTimeout(()=>window.print(),450);</script>
 </body>
 </html>`;
 
@@ -626,7 +625,6 @@
           throw new Error(msg);
         }
 
-        _currentReport = data.report;
         renderReport(data.report, contentEl, stats);
         contentEl.hidden = false;
       } catch (err) {
